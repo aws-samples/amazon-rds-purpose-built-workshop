@@ -29,11 +29,11 @@ You need to have AWS account with  IAM administrator privileges. We recommend to
 
 :warning: **You will be billed for the AWS resource usage** 
 
-   Region| Launch
-    ------|-------
-    US West (Oregon) | [![Launch Who-is-Who Workshop in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
-    US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
- 
+    Region| Launch|
+    ------|-------|
+    US West (Oregon) | [![Launch Who-is-Who Workshop in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)|
+    US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)|
+
 
    1. Enter a unique name for your Stack in the Stack name text box or you can use the default name as CF-AWSDBWorkshop2019   
 
