@@ -16,7 +16,7 @@ You need to have AWS account with  IAM administrator privileges. We recommend to
 
 2. In the upper-right corner of the AWS Management Console, confirm you are in the US West (Oregon) Region.
 
-3. Launch the below CloudFormation template which will provision the AWS resources in your account. We will leverage the following AWS services as part of this workshop.
+3. Click on Launch Stack button below to launch CloudFormation template which will provision the AWS resources in your account. We will leverage the following AWS services as part of this workshop.
       - [VPC](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html) with Public and Private subnets, NAT Gateway and Route tables 
       - [Oracle RDS](https://aws.amazon.com/rds/oracle/) instance launched from a snapshot  preloaded with a sample taxi schema . This will be used as a source for our migration.
       - [Amazon Aurora PostgreSQL](https://aws.amazon.com/rds/aurora/postgresql-features/) as a target for relational data
@@ -29,10 +29,10 @@ You need to have AWS account with  IAM administrator privileges. We recommend to
 
 :warning: **You will be billed for the AWS resource usage** 
 
-Region| Launch
-------|-------
-US West (Oregon) | [![Launch Who-is-Who Workshop in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=S3://us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
-US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=S3://us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
+    Region| Launch
+    ------|-------
+    US West (Oregon) | [![Launch Who-is-Who Workshop in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
+    US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
 
    1. Enter a unique name for your Stack in the Stack name text box or you can use the default name as CF-AWSDBWorkshop2019   
 
@@ -47,11 +47,13 @@ US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws
        
       ![](./assets/cfn3.png)   
 
-   4. Check the box for acknowledging IAM Role creation with custom names.   Click Create Stack.
+   4. Check the box for acknowledging IAM Role creation with custom names and leave the rest to default values.   Click Create Stack.
 
       ![](./assets/cfn4.png)  
 
  > **_NOTE:_** The AWS CloudFormation stack creation takes about 10 minutes. You can see the progress by looking at the events section.
+
+   5. You can monitor the progress of the stack creation by looking at the events tab as shown below.
 
 
       ![](./assets/cfn5.png)  
@@ -59,14 +61,18 @@ US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws
   
 ## (Optional) SQL Client Installation
   Download and install the SQL Clients in your laptop or you can use the SQL client tool of your choice. Suggested open source tools which can work with both Oracle an PostgreSQL are provided below. Please note these tools require JDBC drivers  ([postgreSQL](https://jdbc.postgresql.org/) and [Oracle JDBC](https://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html) for connectivity. 
- 
-     - [dbeaver Community Edition](https://dbeaver.io/download/)
-      
-     - [SQL-Workbench](https://www.sql-workbench.eu/downloads.html)
- 
-For step-by-step instructions on how to configure SQL-Workbench to connect to Oracle/PostgreSQL instances ,please refer to AWS Documentation.([PostgreSQL](https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/) and [Oracle](https://docs.aws.amazon.com/dms/latest/sbs/CHAP_RDSOracle2Aurora.Steps.ConnectOracle.html))
 
-  > **_NOTE:_** For Labs, you don't need Oracle Client or any GUI based clients. Oracle Client is required only if you want to explore the sample data in the source.  For working with target (Aurora PostgreSQL) instance, you can leverage [psql](https://www.postgresql.org/docs/9.5/app-psql.html) command line utility. we will install this as part of Lab1.
+   
+
+ - [dbeaver Community Edition](https://dbeaver.io/download/)
+         
+   
+ - [SQL-Workbench](https://www.sql-workbench.eu/downloads.html)
+
+ 
+For step-by-step instructions on how to configure SQL-Workbench to connect to Oracle/PostgreSQL instances ,please refer to AWS Documentation ([PostgreSQL](https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/) and [Oracle](https://docs.aws.amazon.com/dms/latest/sbs/CHAP_RDSOracle2Aurora.Steps.ConnectOracle.html)).
+
+  > **_NOTE:_** For Labs, you don't need Oracle Client or any GUI based clients. Oracle Client is required only if you want to explore the sample data in the source.  For working with target (Aurora PostgreSQL) instance, you can leverage [psql](https://www.postgresql.org/docs/9.5/app-psql.html) command line utility. We will install this as part of Lab1.
 
 
 ## Workshop Details
