@@ -10,7 +10,7 @@ The days of one-size-fits-all, monolithic databases are behind us. Database desi
 
 
 ## Pre-requisites
-You need to have AWS account with  IAM administrator privileges. We recommend to deploy the solution for Lab1 using CloudFormation template while we go through the presentation. This is to save your time for walkthrough. Please complete the following steps to deploy solution. The CloudFormation will take about 10 minutes to complete.
+You need to have AWS account with  IAM administrator privileges. We recommend to deploy the solution for Lab 1 using CloudFormation template while we go through the presentation. This is to save your time for walk-through. Please complete the following steps to deploy solution. The CloudFormation will take about 10 minutes to complete.
  
 1. Sign into the AWS Management Console [us-west-2](https://console.aws.amazon.com/console/home?region=us-west-2).
 
@@ -29,10 +29,11 @@ You need to have AWS account with  IAM administrator privileges. We recommend to
 
 :warning: **You will be billed for the AWS resource usage** 
 
-    Region| Launch
+   Region| Launch
     ------|-------
     US West (Oregon) | [![Launch Who-is-Who Workshop in us-west-2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
     US East (Virginia) | [![Launch Who-is-Who Workshop in us-east-1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/review?stackName=CF-AWSDBWorkshop2019&templateURL=https://s3-us-west-2.amazonaws.com/us-west-2.serverless-data-analytics/labcontent/amazon-rds-purpose-built-workshop/AWS-DB-Workshop-Purpose-Built-v1.template)
+ 
 
    1. Enter a unique name for your Stack in the Stack name text box or you can use the default name as CF-AWSDBWorkshop2019   
 
@@ -72,7 +73,7 @@ You need to have AWS account with  IAM administrator privileges. We recommend to
  
 For step-by-step instructions on how to configure SQL-Workbench to connect to Oracle/PostgreSQL instances ,please refer to AWS Documentation ([PostgreSQL](https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/) and [Oracle](https://docs.aws.amazon.com/dms/latest/sbs/CHAP_RDSOracle2Aurora.Steps.ConnectOracle.html)).
 
-  > **_NOTE:_** For Labs, you don't need Oracle Client or any GUI based clients. Oracle Client is required only if you want to explore the sample data in the source.  For working with target (Aurora PostgreSQL) instance, you can leverage [psql](https://www.postgresql.org/docs/9.5/app-psql.html) command line utility. We will install this as part of Lab1.
+  > **_NOTE:_** For Labs, you don't need Oracle Client or any GUI based clients. Oracle Client is required only if you want to explore the sample data in the source.  For working with target (Aurora PostgreSQL) instance, you can leverage [psql](https://www.postgresql.org/docs/9.5/app-psql.html) command line utility. We will install this as part of Lab 1.
 
 
 ## Workshop Details
