@@ -260,8 +260,6 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
  5. Click Create task. The task will begin immediately. if not, please start the task.
 
   
-
-
 ## Monitoring Replication Task for DynamoDB 
 
 After task is created, please monitor the ask, by looking at the console as shown below. You can also look at the CloudWatch logs for more information.
@@ -271,7 +269,7 @@ After task is created, please monitor the ask, by looking at the console as show
 > **_NOTE:_** This task may for 10 to 15 minutes.  Please proceed to the next step.
 
 ## Creating Replication Task for Aurora Migration
-
+ Now, we will migrate four tables (Riders, Drivers, Payment and Billing) from Oracle to Aurora PostgreSQL. We have already created the DDL for those tables as part of the environment setup.
 
  1. Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **database migration tasks** in the navigation pane. 
 
@@ -297,7 +295,7 @@ After task is created, please monitor the ask, by looking at the console as show
     - Enable Validation
     - Enable Cloud Watch Logs
 
-  ![](./assets/dms-task2-2.png)
+ ![](./assets/dms-task2-2.png)
 
  6. Under Table Mapping section enter as below:
   - choose JSON Edior and copy & paste the following mapping code.
@@ -396,24 +394,23 @@ After task is created, please monitor the ask, by looking at the console as show
    
    > **_NOTE:_** As part of the migration task, we have created the above mapping rule to include tables that are related to Payment and Billing use case only. DMS provides rich set of selection and transformation rules for migration (e.g. selecting specific tables, remove column,define primary key etc.). For this lab, we will convert the source schema to lower case and rename the schema owner from taxi to public in Aurora PostgreSQL database. Please refer to [DMS](https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html) documentation to learn more.
 
-  ![](./assets/dms-task2-3.png) 
+ ![](./assets/dms-task2-3.png) 
 
  4. Do not modify anything in the Advanced settings.
 
  5. Click Create task. The task will begin immediately. if the task is not started, please start the task manually.
 
- ![](./assets/dms-task2-5.png)
+![](./assets/dms-task2-4.png) 
 
  ## Monitoring Replication Task for Aurora PostgreSQL
 
 1. Go to Replication task and Click the task and look at the Table Statistics.
 
-
-![](./assets/dms-task2-6.png)
+![](./assets/dms-task2-5.png)
 
 2. You can see the logs in CloudWatch Logs.
 
 ![](./assets/dms-task2-6.png)
 
 
-Congrats!! You have successfully completed the Lab1. Now you can proceed to Lab2. 
+**Congrats!!** You have successfully completed the Lab1. Now you can proceed to Lab2. 
