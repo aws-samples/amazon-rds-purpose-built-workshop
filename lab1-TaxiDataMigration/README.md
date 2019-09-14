@@ -84,32 +84,34 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
  
   > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
-     `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
+    `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
 
-      e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
+    e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
    
-      You can verify if the tables are created by running the below command after logging to psql.
+   You can verify if the tables are created by running the below command after logging to psql.
 
-      `\dt ` #list the tables in the database
+   `\dt ` #list the tables in the database
+
 
   ![](./assets/cloud9-2.png)
 
    
 
-Good Job !! At this point, we have completed all the pre-requisites.  We will proceed to the data migration part.
+**Good Job!!** At this point, you have completed all the pre-requisites.  Please proceed to the data migration part.
 
 
 ## Creating Endpoints for Source and Target databases
 
-Before we perform data migration, we need to create endpoints for both source and target databases for verifying the connectivity. This will be required for creating a migration task later in the workshop.
+Before we perform data migration, we need to create endpoints for both source and target databases for verifying the connectivity. This will be required for creating a migration task later in the workshop. 
 
- 1. Set up the source and target endpoints for AWS DMS
+Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **Endpoints** in the navigation pane. 
 
- 2. Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **Endpoints** in the navigation pane. 
 
 ![](./assets/dms1.png)
 
- 3. Create a source endpoint for Oracle RDS as shown following:
+ # Create a source endpoint for Oracle RDS
+
+  Click Create Endpoint. Enter the values as below.
 
     |Parameter| Description|
     |-------------|--------------|
@@ -121,16 +123,22 @@ Before we perform data migration, we need to create endpoints for both source an
     |Password| Enter the password that you entered in the CloudFormation parameter section. (Note:default password: oraadmin123) |
     |SID| ORCL|
 
-Please leave the rest of the settings default. Make sure that the database name, port, and user information are correct. 
+
 
 ![](./assets/dms2.png) 
 
-After creating the endpoint, you should test the connection.
+Please leave the rest of the settings default. Make sure that the database name, port, and user information are correct.  Click Create Endpoint.
+
+
+After creating the endpoint, you should test the connection. Click the endpoint and choose Test connection option.
+
 
 ![](./assets/dms3.png) 
 
-4. Create a Target endpoint for Aurora PostgreSQL as shown following:
+# Create a Target endpoint for Aurora PostgreSQL 
 
+Click Create Endpoint. Enter the values as below.
+ 
 |Parameter| Description|
 |------|-------------
  |Endpoint Identifier | Type a name, such as   **`aurtarget`**|
@@ -138,10 +146,10 @@ After creating the endpoint, you should test the connection.
   |Server name | Enter the Aurora Cluster DNS|
   |Port | 5432|
   |Username | Enter as auradmin|
-  |Password| Enter the password you entered in the   CloudFormation template. (Note: default password: auradmin123) |
+  |Password| Enter the password you entered in the CloudFormation template. (Note: default password: auradmin123) |
   |Database Name| taxidb| 
  
- Please leave the rest of the settings default. Make sure that the Aurora cluster DNS, database name, port, and user information are correct.
+ Please leave the rest of the settings default. Make sure that the Aurora cluster DNS, database name, port, and user information are correct. Click Create Endpoint.
 
 ![](./assets/dms4.png) 
  
@@ -149,7 +157,9 @@ After creating the endpoint, you should test the connection.
 
 ![](./assets/dms5.png) 
 
-5. Create a Target endpoint for Amazon DynamoDB as shown following:
+# Create a Target endpoint for Amazon DynamoDB.
+
+Click Create Endpoint. Enter the values as below.
  
  |Parameter| Description|
  |------|---------------
@@ -157,7 +167,7 @@ After creating the endpoint, you should test the connection.
   |Target Engine | dynamodb|
  |Service access role ARN| Enter the IAM Role ARN (Note: Provide the value of DMSDDBRoleARN from CloudFormation Outputs section)|
 
-  Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct.
+  Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct. Click Create Endpoint.
    
   ![](./assets/dms6.png) 
   
