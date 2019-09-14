@@ -27,7 +27,7 @@ STREAM_ARN=$(aws dynamodb update-table --table-name aws-db-workshop-trips --stre
 echo stream/$STREAM_ARN
 ```
 
-> Note: Please make a note of the output containing the Amazon Dynamodb Stream name __(e.g. stream/2019-09-14T05:39:36.199)__.
+> Note: Please make a note of the output containing the Amazon Dynamodb Stream name _(e.g. stream/2019-09-14T05:39:36.199)_.
 
 ## SAM
 
