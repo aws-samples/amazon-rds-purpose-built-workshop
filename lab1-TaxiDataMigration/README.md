@@ -1,7 +1,7 @@
 # Lab 1: Migrating Taxi data to Amazon DynamoDB and Amazon Aurora using AWS DMS
 [AWS DMS](https://aws.amazon.com/dms/) AWS Database Migration Service helps you migrate databases to AWS quickly and securely.
 
-In this lab, you will be performing a migration of sample taxi data schema from Oracle to Amazon DynamoDB and Amazon Aurora PostgreSQL databases.
+In this lab, you will be performing a migration of sample taxi data schema from Oracle to Amazon DynamoDB and Amazon Aurora PostgreSQL databases. For the purpose of this illustration, we have created a typical relational schema with foreign key dependencies between tables. We have used a sample trip data (green taxi-Jan 2016) from [AWS Open dataset registry](https://registry.opendata.aws/nyc-tlc-trip-records-pds/) to populate trips table.
 
 
 ## High Level Architecture Overview
@@ -20,23 +20,28 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
  1.  Check if the CloudFormation has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#) and Click on the Stack that was created earlier and look at the Outputs section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
 
-    ![](./assets/cfn6.png)
+ ![](./assets/cfn6.png)
 
- 2.  Test the connectivity to Oracle RDS and Aurora PostgreSQL from your laptop using SQL Clients (Optional). 
+ 2. (Optional) Test the connectivity to Oracle RDS and Aurora PostgreSQL from your laptop using SQL Clients. You may want to explore the source Oracle schema by running some sample queries against taxi schema. 
  
      e.g.  Query the source (Oracle) schema
 
    
     SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI')
     GROUP BY owner,object_type;
-     
+     OBJECT_TYPE  COUNT(*)
+      TRIGGER 3
+      LOB   2
+      TABLE 11
+      SEQUENCE 5
+      INDEX 17
 
     select count(*) from taxi.trips;
+      Count(*) 
+      128714
     
 
-
-
- 3. We will leverage  [AWS Cloud9]([https://aws.amazon.com/cloud9/]) IDE for throughout this workshop for running scripts and deploying code, etc.
+ 3. We will leverage [AWS Cloud9]([https://aws.amazon.com/cloud9/]) IDE for throughout this workshop for running scripts and deploying code, etc.
 
  4. Open [Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home?region=us-west-2#) development environment which is created as part of the CloudFormation stack. 
 
