@@ -4,6 +4,9 @@
 * [High level Architecture](#High-level-architecture)
 * [Preparing the Environment](#Preparing-the-Environment)  
 * [Creating DMS Endpoints for Source and Target databases](#Creating-DMS-Endpoints-for-Source-and-Target-databases)
+    * [Create a Source endpoint for Oracle RDS](#Create-a-Source-endpoint-for-Oracle-RDS)
+    * [Create a Target endpoint for Aurora PostgreSQL](#Create-a-Target-endpoint-for-Aurora-PostgreSQL)
+    * [Create a Target endpoint for Amazon DynamoDB](#Create-a-Target-endpoint-for-Amazon-DynamoDB)
 * [Creating Replication Task for DynamoDB Migration](#Creating-Replication-Task-for-DynamoDB-Migration)  
     * [Monitoring Replication Task for DynamoDB](#Monitoring-Replication-Task-for-DynamoDB )
 * [Creating Replication Task for Aurora Migration](#Creating-Replication-Task-for-Aurora-Migration) 
@@ -109,9 +112,9 @@ Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?reg
 
 ![](./assets/dms1.png)
 
- # Create a source endpoint for Oracle RDS
+ # Create a Source endpoint for Oracle RDS
 
-  Click Create Endpoint. Enter the values as follows:
+  Click **Create endpoint**. Enter the values as follows:
 
 |Parameter|Description|
   |-------------|--------------|
@@ -126,7 +129,7 @@ Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?reg
 
 ![](./assets/dms2.png) 
 
-Please leave the rest of the settings default. Make sure that the database name, port, and user information are correct.  Click Create Endpoint.
+Please leave the rest of the settings default. Make sure that the database name, port, and user information are correct.  Click **Create endpoint**.
 
 
 After creating the endpoint, you should test the connection. Click the endpoint and choose Test connection option.
@@ -136,7 +139,7 @@ After creating the endpoint, you should test the connection. Click the endpoint 
 
 # Create a Target endpoint for Aurora PostgreSQL 
 
-Click Create Endpoint. Enter the values as follows:
+Click **Create endpoint**. Enter the values as follows:
  
 |Parameter| Description|
 |------|-------------
@@ -148,7 +151,7 @@ Click Create Endpoint. Enter the values as follows:
   |Password| Enter the password you entered in the CloudFormation template. (Note: default password: auradmin123) |
   |Database Name| taxidb| 
  
- Please leave the rest of the settings default. Make sure that the Aurora cluster DNS, database name, port, and user information are correct. Click Create Endpoint.
+ Please leave the rest of the settings default. Make sure that the Aurora cluster DNS, database name, port, and user information are correct. Click **Create endpoint**.
 
 ![](./assets/dms4.png) 
  
@@ -156,9 +159,9 @@ Click Create Endpoint. Enter the values as follows:
 
 ![](./assets/dms5.png) 
 
-# Create a Target endpoint for Amazon DynamoDB.
+# Create a Target endpoint for Amazon DynamoDB
 
-Click Create Endpoint. Enter the values as follows:
+Click **Create endpoint**. Enter the values as follows:
  
  |Parameter| Description|
  |------|---------------
@@ -168,7 +171,7 @@ Click Create Endpoint. Enter the values as follows:
 
   ![](./assets/dms6.png) 
 
-  Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct. Click Create Endpoint.
+  Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct. Click **Create endpoint**.
    
   
  After creating the endpoint, you should test the connection.
@@ -183,7 +186,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
 
  1. Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **database migration tasks** in the navigation pane. 
 
- 2. Click Create task
+ 2. Click **Create task**
 
  3. Task creation includes multiple sections. Under Task Configuration, enter below.
      
@@ -277,7 +280,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
 
  4. Do not modify anything in the Advanced settings.
 
- 5. Click Create task. The task will begin immediately. if not, please start the task.
+ 5. Click **Create task**. The task will begin immediately. if not, please start the task(Click the Actions and Start/Restart task).
 
   
 ## Monitoring Replication Task for DynamoDB 
@@ -293,7 +296,7 @@ After task is created, please monitor the ask, by looking at the console as show
 
  1. Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **database migration tasks** in the navigation pane. 
 
- 2. Click Create task.
+ 2. Click **Create task**.
 
  3. Database migration Task creation includes multiple sections. Under Task Configuration, enter below.
      
@@ -418,17 +421,17 @@ After task is created, please monitor the ask, by looking at the console as show
 
  4. Do not modify anything in the Advanced settings.
 
- 5. Click Create task. The task will begin immediately. if the task is not started, please start the task manually.
+ 5. Click **Create task**. The task will begin immediately. if the task is not started, please start the task manually(Click the Actions and Start/Restart task).
 
 ![](./assets/dms-task2-4.png) 
 
  ## Monitoring Replication Task for Aurora PostgreSQL
 
-1. Go to Replication task and Click the task and look at the Table Statistics.
+1. Go to Replication task and **Click the task** and look at the Table Statistics.
 
 ![](./assets/dms-task2-5.png)
 
-2. You can see the logs in CloudWatch Logs.
+2. You can also see the logs in CloudWatch Logs.
 
 ![](./assets/dms-task2-6.png)
 
