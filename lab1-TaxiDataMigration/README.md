@@ -1,32 +1,43 @@
 # Lab 1: Migrating Taxi data to Amazon DynamoDB and Amazon Aurora using AWS DMS
+
+* [Overview](#overview)  
+* [High level Architecture](#High-level-architecture)
+* [Preparing the Environment](#Preparing-the-Environment)  
+* [Creating DMS Endpoints for Source and Target databases](#Creating-DMS-Endpoints-for-Source-and-Target-databases)
+* [Creating Replication Task for DynamoDB Migration](#Creating-Replication-Task-for-DynamoDB-Migration)  
+    * [Monitoring Replication Task for DynamoDB](#Monitoring-Replication-Task for-DynamoDB )
+* [Creating Replication Task for Aurora Migration](#Creating-Replication-Task-for-Aurora-Migration) 
+    * [Monitoring Replication Task for DynamoDB](#Monitoring-Replication-Task for-Aurora )
+
+##Overview
 [AWS DMS](https://aws.amazon.com/dms/) AWS Database Migration Service helps you migrate databases to AWS quickly and securely.
+In this lab, you will be performing a migration of sample taxi data schema from Oracle to Amazon DynamoDB and Amazon Aurora PostgreSQL databases. For the purpose of this illustration, we have created a typical relational schema with foreign key dependencies between tables. We have used sample trip data (green taxi-Jan 2016) from [AWS Open dataset registry](https://registry.opendata.aws/nyc-tlc-trip-records-pds/) to populate trips table.
 
-In this lab, you will be performing a migration of sample taxi data schema from Oracle to Amazon DynamoDB and Amazon Aurora PostgreSQL databases. For the purpose of this illustration, we have created a typical relational schema with foreign key dependencies between tables. We have used a sample trip data (green taxi-Jan 2016) from [AWS Open dataset registry](https://registry.opendata.aws/nyc-tlc-trip-records-pds/) to populate trips table.
 
-
-## High Level Architecture Overview
+##High Level Architecture 
 
 As part of this lab, we will migrate the **Trips** table  which is used by trips booking and management application to DynamoDB.  The application will store the data as a key-value schema and leverage the automatic scaling, flexible schema, serverless characteristics of DynamoDB for better scalability, availability and performance. 
 
-In DynamoDB, tables, items, and attributes are the core components that you work with. A table is a collection of items, and each item is a collection of attributes. DynamoDB uses primary keys, called partition keys, to uniquely identify each item in a [table](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html). You can also use [secondary indexes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html) to provide more querying flexibility. for this lab, we have created a DynamoDB table namely aws-db-workshop-trips with a partition_key:riderid and sort_key (tripinfo) which uniquely identifies the trip data. We will also create a secondary index with driverid so that your application can query the table using both riderid as well as driverid.
+In DynamoDB, tables, items, and attributes are the core components that you work with. A table is a collection of items, and each item is a collection of attributes. DynamoDB uses primary keys, called partition keys, to uniquely identify each item in a [table](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html). You can also use [secondary indexes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html) to provide more querying flexibility. for this lab, we have created a DynamoDB table namely [aws-db-workshop-trips](./assets/ddb.png) with a partition_key:riderid and sort_key (tripinfo) which uniquely identifies the trip data. We will also create a secondary index with driverid so that your application can query the table using both riderid as well as driverid.
 
 
-For billing and payment use cases, we will migrate the **Billing**, **Riders**, **Drivers** and **Payment** tables to Aurora postgreSQL. Amazon Aurora combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases. The billing and payment application will leverage the ACID, transactional and analytics capabilities of the [PostgreSQL](https://aws.amazon.com/rds/aurora/postgresql-features/) database. Using Aurora, we can scale the read traffic by adding additional read nodes as needed.  
+For billing and payment use cases, we will migrate the **Billing**, **Riders**, **Drivers** and **Payment** tables to Aurora postgreSQL. Amazon Aurora combines the performance and availability of traditional enterprise databases with the simplicity and cost-effectiveness of open source databases. The billing and payment application will leverage the ACID, transactional and analytics capabilities of the [PostgreSQL](https://aws.amazon.com/rds/aurora/postgresql-features/) database. Using Aurora, we can scale the read traffic by adding additional read nodes as needed. The figure beloe depicts the high level deployment architecture.  
  
 
  ![](./assets/lab1-arch.png)
 
 ## Preparing the Environment
 
- 1.  Check if the CloudFormation has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#) and Click on the Stack that was created earlier and look at the Outputs section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
+ 1.  Check if the CloudFormation Stack has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#) and Click on the Stack that was created earlier and look at the Outputs section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
 
- ![](./assets/cfn6.png)
+    ![](./assets/cfn6.png)
 
- 2. (Optional) Test the connectivity to Oracle RDS and Aurora PostgreSQL from your laptop using SQL Clients. You may want to explore the source Oracle schema by running some sample queries against taxi schema. 
+
+ 2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries against taxi schema. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model-sample.png) and [sample output](./assets/oracle-taxi-schema.txt) 
  
      e.g.  Query the source (Oracle) schema
 
-   
+   ```
     SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI')
     GROUP BY owner,object_type;
      OBJECT_TYPE  COUNT(*)
@@ -39,24 +50,23 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
     select count(*) from taxi.trips;
       Count(*) 
       128714
-    
-
- 3. We will leverage [AWS Cloud9]([https://aws.amazon.com/cloud9/]) IDE for throughout this workshop for running scripts and deploying code, etc.
+    ```
+     
+ 3. We will leverage [AWS Cloud9](https://aws.amazon.com/cloud9/) IDE throughout this workshop for running scripts and deploying code, etc.
 
  4. Open [Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home?region=us-west-2#) development environment which is created as part of the CloudFormation stack. 
 
-    ![](./assets/cloud9-1.png)
+  ![](./assets/cloud9-1.png)
 
- 5. We will Cloud9 environment to clone the github repository.  Run
-    the below command in the terminal.
+ 5. We will Cloud9 environment to clone the github repository.  Run the below command in the terminal.
 
-    `#git clone  [https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git)  .`
+    `#git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git .`
 
  6. Install postgresql client and related libraries in the Cloud9 environment. This is required to use the postgresql command line utility psql.
 
      `sudo yum install -y postgresql95 postgresql95-contrib postgresql95-devel`  
 
-7. Connect to target Aurora postgreSQL using psql command as shown below.
+7. Connect to target Aurora postgreSQL using psql command as shown below. For more options and commands, refer to [psql](https://www.postgresql.org/docs/9.6/app-psql.html) documentation
 
     `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb `
 
