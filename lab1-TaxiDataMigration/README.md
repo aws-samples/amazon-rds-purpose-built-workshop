@@ -31,12 +31,12 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
  1.  Check if the CloudFormation Stack has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#) and Click on the Stack that was created earlier and look at the Outputs section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
 
-  ![](./assets/cfn6.png)
+ ![](./assets/cfn6.png)
 
 
  2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries against taxi schema. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model-sample.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query for source (Oracle) schema are given below.
-    ```
-    SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY owner,object_type;
+    
+    `SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY owner,object_type;
     OBJECT_TYPE  COUNT(*)
      TRIGGER 3
      LOB   2
@@ -45,7 +45,7 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
      INDEX 17
      Select count(*) from taxi.trips;
        Count(*) 
-      128714       
+      128714       `
          
 3. We will leverage [AWS Cloud9](https://aws.amazon.com/cloud9/) IDE throughout this workshop for running scripts and deploying code, etc.
 
@@ -87,7 +87,7 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
    `\dt ` #list the tables in the database
 
-   ![](./assets/cloud9-2.png)
+  ![](./assets/cloud9-2.png)
 
    > **_NOTE:_** Make sure you execute the above command from the root directory of the cloned github repository (or) provide a absolute file path.
 
@@ -102,7 +102,7 @@ Before we perform data migration, we need to create endpoints for both source an
 
  2. Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **Endpoints** in the navigation pane. 
 
-   ![](./assets/dms1.png)
+  ![](./assets/dms1.png)
 
  3. Create a source endpoint for Oracle RDS as shown following:
 
@@ -118,11 +118,11 @@ Before we perform data migration, we need to create endpoints for both source an
 
 Please leave the rest of the settings default. Make sure that the database name, port, and user information are correct. 
 
- ![](./assets/dms2.png) 
+![](./assets/dms2.png) 
 
 After creating the endpoint, you should test the connection.
 
- ![](./assets/dms3.png) 
+![](./assets/dms3.png) 
 
 4. Create a Target endpoint for Aurora PostgreSQL as shown following:
 
@@ -138,11 +138,11 @@ After creating the endpoint, you should test the connection.
  
  Please leave the rest of the settings default. Make sure that the Aurora cluster DNS, database name, port, and user information are correct.
 
-   ![](./assets/dms4.png) 
+![](./assets/dms4.png) 
  
  After creating the endpoint, you should test the connection as shown below.
 
-   ![](./assets/dms5.png) 
+![](./assets/dms5.png) 
 
 5. Create a Target endpoint for Amazon DynamoDB as shown following:
  
