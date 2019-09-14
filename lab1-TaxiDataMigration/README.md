@@ -132,7 +132,7 @@ Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?reg
 Please leave the rest of the settings default. Make sure that the database name, port, and user information are correct.  Click **Create endpoint**.
 
 
-After creating the endpoint, you should test the connection. Click the endpoint and choose Test connection option.
+After creating the endpoint, you should test the connection. Click the endpoint and choose Test connection option. Choose the DMS instance created by the CloudFormation stack.
 
 
 ![](./assets/dms3.png) 
@@ -155,7 +155,7 @@ Click **Create endpoint**. Enter the values as follows:
 
 ![](./assets/dms4.png) 
  
- After creating the endpoint, you should test the connection as shown below.
+ After creating the endpoint, you should test the connection as shown below. Choose the DMS instance created by the CloudFormation stack
 
 ![](./assets/dms5.png) 
 
@@ -174,7 +174,7 @@ Click **Create endpoint**. Enter the values as follows:
   Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct. Click **Create endpoint**.
    
   
- After creating the endpoint, you should test the connection.
+ After creating the endpoint, you should test the connection as shown below. Choose the DMS instance created by the CloudFormation stack.
 
   ![](./assets/dms7.png) 
 
@@ -429,7 +429,7 @@ After task is created, please monitor the ask, by looking at the console as show
 
 1. Go to Replication task and **Click the task** and look at the Table Statistics.
 
-![](./assets/dms-task2-5.png)
+![](./assets/dms-task-2-5.png)
 
 2. You can also see the logs in CloudWatch Logs.
 
