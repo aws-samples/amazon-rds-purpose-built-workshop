@@ -84,13 +84,13 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
  
   > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
-    `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
+      `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
 
-    e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
+      e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
    
-   You can verify if the tables are created by running the below command after logging to psql.
+      You can verify if the tables are created by running the below command after logging to psql.
 
-   `\dt ` #list the tables in the database
+      `\dt ` #list the tables in the database
 
 
   ![](./assets/cloud9-2.png)
@@ -111,18 +111,17 @@ Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?reg
 
  # Create a source endpoint for Oracle RDS
 
-  Click Create Endpoint. Enter the values as below.
+  Click Create Endpoint. Enter the values as follows:
 
-    |Parameter| Description|
-    |-------------|--------------|
-    |Endpoint Identifier | Type a name, such as   **`orasource`**|
-    |Source Engine | Oracle|
-    |Server name | Enter the Oracle RDS DNS|
-    |Port | 1521|
-    |Username | Enter as dbadmin|
-    |Password| Enter the password that you entered in the CloudFormation parameter section. (Note:default password: oraadmin123) |
-    |SID| ORCL|
-
+|Parameter|Description|
+  |-------------|--------------|
+   |Endpoint Identifier | Type a name, such as   **`orasource`**|
+   |Source Engine | Oracle|
+   |Server name | Enter the Oracle RDS DNS|
+   Port | 1521|
+   |Username | Enter as dbadmin|
+   Password| Enter the password that you entered in the CloudFormation parameter section. (Note:default password: oraadmin123) |
+   |SID| ORCL|
 
 
 ![](./assets/dms2.png) 
@@ -137,7 +136,7 @@ After creating the endpoint, you should test the connection. Click the endpoint 
 
 # Create a Target endpoint for Aurora PostgreSQL 
 
-Click Create Endpoint. Enter the values as below.
+Click Create Endpoint. Enter the values as follows:
  
 |Parameter| Description|
 |------|-------------
@@ -159,7 +158,7 @@ Click Create Endpoint. Enter the values as below.
 
 # Create a Target endpoint for Amazon DynamoDB.
 
-Click Create Endpoint. Enter the values as below.
+Click Create Endpoint. Enter the values as follows:
  
  |Parameter| Description|
  |------|---------------
@@ -167,9 +166,10 @@ Click Create Endpoint. Enter the values as below.
   |Target Engine | dynamodb|
  |Service access role ARN| Enter the IAM Role ARN (Note: Provide the value of DMSDDBRoleARN from CloudFormation Outputs section)|
 
+  ![](./assets/dms6.png) 
+
   Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct. Click Create Endpoint.
    
-  ![](./assets/dms6.png) 
   
  After creating the endpoint, you should test the connection.
 
@@ -199,7 +199,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
 
  4. Click Start task on create
 
-  ![](./assets/dms-task-1.png)
+  ![](./assets/dms-task1-1.png)
 
 
  5. Under Task settings , enter as below
@@ -209,7 +209,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
 
    ![](./assets/dms-task1-2.png) 
 
- 6. Under Table Mapping section enter as below:
+ 6. Under Table Mapping section, enter as below:
   - choose JSON Edior and copy & paste the following transformation code.
   
       ```
