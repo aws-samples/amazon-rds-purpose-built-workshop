@@ -36,7 +36,8 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
  2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries against taxi schema. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model-sample.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query for source (Oracle) schema are given below.
     
-    `SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY owner,object_type;
+    ```
+    SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY owner,object_type;
     OBJECT_TYPE  COUNT(*)
      TRIGGER 3
      LOB   2
@@ -45,7 +46,8 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
      INDEX 17
      Select count(*) from taxi.trips;
        Count(*) 
-      128714       `
+      128714 
+      ```
          
 3. We will leverage [AWS Cloud9](https://aws.amazon.com/cloud9/) IDE throughout this workshop for running scripts and deploying code, etc.
 
