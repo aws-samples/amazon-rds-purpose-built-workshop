@@ -34,7 +34,8 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
  ![](./assets/cfn6.png)
 
 
- 2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries against taxi schema. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model-sample.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query for source (Oracle) schema are given below.
+
+ 2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries against taxi schema. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query for source (Oracle) schema are given below.
     
     ```
     SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY owner,object_type;
@@ -53,9 +54,9 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
  4. Open [Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home?region=us-west-2#) development environment which is created as part of the CloudFormation stack. 
 
-  ![](./assets/cloud9-1.png)
+    ![](./assets/cloud9-1.png)
 
- 5. We will Cloud9 environment to clone the github repository.  Run the below command in the terminal.
+ 5. We will leverage Cloud9 environment to clone the github repository.Run the below command in the terminal.
 
     `#git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git .`
 
@@ -80,18 +81,20 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
     Note: As you have figured out, there are no tables created in Aurora database yet.
   
  8.  Please note that before we migrate data from Oracle RDS to Aurora, we need to setup a target schema. We recommend to leverage [AWS SCT]([https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Welcome.html) to migrate schema from Oracle to PostgreSQL. However, for this workshop, we have provided a converted schema to use in the target Aurora environment.  Please execute the following command to create the schema.
+ 
+  > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
      `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
 
-   e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
+      e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
    
-   You can verify if the tables are created by running the below command after logging to psql.
+      You can verify if the tables are created by running the below command after logging to psql.
 
-   `\dt ` #list the tables in the database
+      `\dt ` #list the tables in the database
 
   ![](./assets/cloud9-2.png)
 
-   > **_NOTE:_** Make sure you execute the above command from the root directory of the cloned github repository (or) provide a absolute file path.
+   
 
 Good Job !! At this point, we have completed all the pre-requisites.  We will proceed to the data migration part.
 
@@ -104,7 +107,7 @@ Before we perform data migration, we need to create endpoints for both source an
 
  2. Open the [AWS DMS console](https://us-west-2.console.aws.amazon.com/dms/home?region=us-west-2), and choose **Endpoints** in the navigation pane. 
 
-  ![](./assets/dms1.png)
+![](./assets/dms1.png)
 
  3. Create a source endpoint for Oracle RDS as shown following:
 
