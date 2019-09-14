@@ -56,7 +56,7 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
     ![](./assets/cloud9-1.png)
 
- 5. We will leverage Cloud9 environment to clone the github repository.Run the below command in the terminal.
+ 5. In the Cloud9 terminal environment Run the below command to clone the github repository.
 
     `#git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git .`
 
@@ -84,11 +84,11 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
  
   > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
-      `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
+    `sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_nyc_taxi_schema.sql`
 
-      e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
+   e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
    
-      You can verify if the tables are created by running the below command after logging to psql.
+  You can verify if the tables are created by running the below command after logging via psql.
 
       `\dt ` #list the tables in the database
 
@@ -433,4 +433,4 @@ After task is created, please monitor the ask, by looking at the console as show
 ![](./assets/dms-task2-6.png)
 
 
-**Congrats!!** You have successfully completed the Lab1. Now you can proceed to Lab2. 
+**Congrats!!** You have successfully completed the Lab1. Now you can proceed to [Lab 2](../lab2-TaxiBookingAndPayments/). 
