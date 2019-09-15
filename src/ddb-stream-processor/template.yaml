@@ -5,11 +5,11 @@ Parameters:
     FunctionNameParameter:
         Type: String
         Default: aws-db-workshop-ddb-stream-processor
-        Description: Name of the Lambda function. Default is 'aws-db-workshop-ddb-stream-processor'
+        Description: Name of the Lambda function. Default is aws-db-workshop-ddb-stream-processor
     LambdaLayerNameParameter:
         Type: String
-        Default: aws-db-workshop–pg8000-layer
-        Description: Name of the Lambda Layer. Default name is 'aws-db-workshop–pg8000-layer'
+        Default: aws-db–pg8000-layer
+        Description: Name of the Lambda Layer. Default name is 'aws-db–pg8000-layer'
     DatabaseName:
         Type: String
         Description: Name of the Amazon Aurora database containing the trips table
