@@ -10,6 +10,8 @@
 * [Deploying the AWS Lambda Function](#deploying-aws-lambda-function) 
     * [Packaging PG8000 binaries](#packaging-pg8000-binaries)
     * [Deploy AWS Lambda Function and AWS Lambda Layer using AWS SAM template](#deploy-aws-lambda-function-an-aws-lambda-layer-using-aws-sam-template)
+* [Taxi Ride Workflow](#taxi-ride-workflow)
+    *[Taxi Trip Booking Workflow](#taxi-trip-booking-workflow)
     
  
 ## Overview
@@ -163,15 +165,42 @@ LAMBDASUBNET1_ID=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHO
 LAMBDASUBNET2_ID=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="LambdaSubnet2") | .OutputValue')
 echo $LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID
 
-sam deploy --template-file template-out.yaml --capabilities CAPABILITY_IAM --stack-name SAM-AWSDBWorkshop2019 --parameter-overrides DDBStreamName=$AWSDBWORKSHOP_DDB_STREAM_NAME SecurityGroupIds=$LAMBDASECURITYGROUP_ID VpcSubnetIds=$LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID DatabaseName=$AURORADB_NAME DatabaseHostName=$AURORACLUSTERENDPOINT_NAME DatabaseUserName=AURORADBMASTERUSER_NAME DatabasePassword=<substitue-with-the-password-of-aurora-database>
+sam deploy --template-file template-out.yaml --capabilities CAPABILITY_IAM --stack-name SAM-AWSDBWorkshop2019 --parameter-overrides DDBStreamName=$AWSDBWORKSHOP_DDB_STREAM_NAME SecurityGroupIds=$LAMBDASECURITYGROUP_ID VpcSubnetIds=$LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID DatabaseName=$AURORADB_NAME DatabaseHostName=$AURORACLUSTERENDPOINT_NAME DatabaseUserName=$AURORADBMASTERUSER_NAME DatabasePassword=<substitue-with-the-password-of-aurora-database>
 ```
 
+>Note: This may take few minutes. Ensure that the SAM teamplate was successfully deployed. Look for the following line in the terminal as output
+>```
+>Successfully created/updated stack - SAM-AWSDBWorkshop2019
+>```
 
-1. Open the AWS Management Console for CloudFormation from [here](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2).  
-2. In the upper-right corner of the AWS Management Console, confirm you are in the US West (Oregon) Region.  
-3. Click on _Stacks_ in the navigation pane on the right.  
-4. Under _Stacks_ click on the name of the Amazon CloudFormaiton stack (e.g. _CF-AWSDBWorkshop2019_) that you deployed in the previous lab.  
-5. Click the _Outputs_ tab in the    
-
-
+Now you have successfully deployed the Lambda function.
  
+ 
+ ## Taxi Ride Workflow
+ In this section you run the python scripts to simulate the booking of a taxi ride followed by acceptance of the drive and completion of the ride by the driver. After the trip is complete you will run backend SQL queries to process billing and driver payments.
+ 
+ ### Taxi Trip Booking Workflow
+ 
+1. Copy and paste the following commands as a rider to book a new trip.
+ 
+```shell script
+cd ~/environment/amazon-rds-purpose-built-workshop/src/ddb-python-script/
+python3 rider-book-trip.py
+```
+
+> From the output of the script make a note of the tripinfo value. You will be entering this value when prompted by the subsequent scripts. It a randomly generated string that uniquely identifies a trip. It will similar to 
+>```
+> 0724662,2019-09-15T20:41:30.455031Z
+>``` 
+
+2. Copy and paste the following command as a driver to accept a trip. The script will prompt for the 'tripinfo' value. Enter the value from the output of the previous python script you just ran as a rider to book a new trip.
+
+```shell script
+python3 driver-accept-trip.py
+```
+ 
+3. Copy and paste the following command as a driver to accept a trip. The script will prompt for the 'tripinfo' value. Enter the same 'tripinfo' value that you provided as input to the previous python script you just ran as a driver to accept a trip.
+
+```shell script
+python3 driver-accept-trip.py
+```
