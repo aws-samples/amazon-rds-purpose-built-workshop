@@ -16,7 +16,7 @@ class DecimalEncoder(json.JSONEncoder):
 # Get the service resource.
 dynamodb = boto3.resource('dynamodb')
 
-table = dynamodb.Table('trips')
+table = dynamodb.Table('aws-db-workshop-trips')
 
 
 def getTripInfo(infoReq):

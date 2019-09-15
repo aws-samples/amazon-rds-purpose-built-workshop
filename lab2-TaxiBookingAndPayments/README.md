@@ -8,6 +8,8 @@
     * [Install AWS SDK for Python](#install-aws-sdk-for-python)
 * [Enable Amazon Dynamodb Streams](#enable-amazon-dynamodb-streams)
 * [Deploying the AWS Lambda Function](#deploying-aws-lambda-function) 
+    * [Packaging PG8000 binaries](#packaging-pg8000-binaries)
+    * [Deploy AWS Lambda Function and AWS Lambda Layer using AWS SAM template](#deploy-aws-lambda-function-an-aws-lambda-layer-using-aws-sam-template)
     
  
 ## Overview
@@ -55,7 +57,7 @@ pip3 install boto3 --user
 ## Enable Amazon Dynamodb Streams
 In this section you will enable Amazon Dynamodb stream for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_ that was created as part of the Amazon CloudFormaiton teample.
 
-5. Copy and paste the command below in the terminal window to enable streams for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_
+5. Copy and paste the commands below in the terminal window to enable streams for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_
 ```shell script
 STREAM_ARN=$(aws dynamodb update-table --table-name aws-db-workshop-trips --stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES | jq '.TableDescription.LatestStreamArn' | cut -d'/' -f4)
 echo stream/$STREAM_ARN
@@ -66,8 +68,40 @@ echo stream/$STREAM_ARN
 Now that you have enabled the Amazon DynamoDB stream the next step is to deploy the AWS Lambda function that will process the records from the stream.
 
 ## Deploying AWS Lambda Function
-In this section we will be using AWS Serverless Applicaiton Model ([SAM]((https://aws.amazon.com/serverless/sam/))) CLI to deploy a Lambda Function within the same Amazon Virtual Private Network([VPC](https://aws.amazon.com/vpc/)). The SAM deployment will also include a python interface ([pg8000](https://pypi.org/project/pg8000/)) to the PostgreSQL database engine as an AWS Lambda Layer. This Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). Only when a trip is completed (denoted by the _STATUS_ attribute in the trip item/ record) the function inserts information into a relational table (_trips_) in Amazon Aurora database. 
+In this section we will be using AWS Serverless Applicaiton Model ([SAM]((https://aws.amazon.com/serverless/sam/))) CLI to deploy a Lambda Function within the same Amazon Virtual Private Network([VPC](https://aws.amazon.com/vpc/)). The SAM deployment will also include a python interface to the PostgreSQL database engine as an AWS Lambda Layer. This Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). Only when a trip is completed (denoted by the _STATUS_ attribute in the trip item/ record) the function inserts information into a relational table (_trips_) in Amazon Aurora database. 
 
+### Packaging the PG8000 binaries 
+
+In this section you will download and package the binaries for [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine. The package will deployed as an AWS Lambda Layer.
+
+- Copy and paste the commands below in the terminal window in the Cloud9 IDE.
+
+```shell script
+cd ~/environment
+mkdir pglayer
+virtualenv -p python3 pglayer
+cd pglayer
+source bin/activate
+mkdir -p pg8000-layer/python
+pip install pg8000 -t pg8000-layer/python
+cd pg8000-layer
+zip -r pg8000-layer.zip python
+mkdir ~/environment/amazon-rds-purpose-built-workshop/src/ddb-stream-processor/dependencies/
+cp ~/environment/pglayer/pg8000-layer/pg8000-layer.zip ~/environment/amazon-rds-purpose-built-workshop/src/ddb-stream-processor/dependencies/
+```
+
+### Deploy AWS Lambda Function and AWS Lambda Layer using AWS SAM template
+In this section you will validate the SAM template that contains the configuration for the AWS Lambda function and the AWS Lambda Layer. 
+
+
+1. To validate the SAM template please copy and paste the commands below in the terminal window
+
+```shell script
+cd ~/environment/amazon-rds-purpose-built-workshop/src/ddb-stream-processor
+sam validate
+```
+
+> Note: 
 
 1. Open the AWS Management Console for CloudFormation from [here](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2).  
 2. In the upper-right corner of the AWS Management Console, confirm you are in the US West (Oregon) Region.  
