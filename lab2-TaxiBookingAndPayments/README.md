@@ -10,8 +10,8 @@
 * [Deploying the AWS Lambda Function](#deploying-aws-lambda-function) 
     * [Packaging PG8000 binaries](#packaging-pg8000-binaries)
     * [Deploy AWS Lambda Function and AWS Lambda Layer using AWS SAM template](#deploy-aws-lambda-function-an-aws-lambda-layer-using-aws-sam-template)
-* [Taxi Ride Workflow](#taxi-ride-workflow)
-    *[Taxi Trip Booking Workflow](#taxi-trip-booking-workflow)
+* [Taxi Ride Workflow](#taxi-ride-workflow)  
+    * [Taxi Trip Booking Workflow](#taxi-trip-booking-workflow)
     
  
 ## Overview
@@ -148,7 +148,7 @@ aws s3 ls s3://$S3_BUCKETNAME
 > 2019-09-15 16:39:56      71954 d3eec91527b02d78de30ae42198cd0c0
 > ```
 
-5. Substitute the string (_<substitue-with-the-password-of-aurora-database>_) with password string on the Aurora database. Copy and paste the commands to deploy the AWS Lambda Function along with the AWS Lambda Layer. The AWS Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). The AWS Lambda Layer include the [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine.
+5. Substitute the string (_<substitue-with-the-password-of-aurora-database>_) with password string for the Aurora database. Copy and paste the commands to deploy the AWS Lambda Function along with the AWS Lambda Layer. The AWS Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). The AWS Lambda Layer include the [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine.
 
 ```shell script
 cd ~/environment/amazon-rds-purpose-built-workshop/src/ddb-stream-processor
@@ -204,3 +204,103 @@ python3 driver-accept-trip.py
 ```shell script
 python3 driver-accept-trip.py
 ```
+
+
+## Driver Billing and Payments
+
+1. Copy and paste the commands below to connect to the Amazon Aurora database. Enter the password string for the the Aurora database when prompted.
+
+```shell script
+AURORADB_NAME=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="AuroraDBName") | .OutputValue')
+echo $AURORADB_NAME
+AURORACLUSTERENDPOINT_NAME=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="AuroraClusterEndpointName") | .OutputValue')
+echo $AURORACLUSTERENDPOINT_NAME
+AURORADBMASTERUSER_NAME=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="AuroraDBMasterUser") | .OutputValue')
+echo $AURORADBMASTERUSER_NAME
+
+sudo psql -h $AURORACLUSTERENDPOINT_NAME -U $AURORADBMASTERUSER_NAME -d $AURORADB_NAME
+```
+
+2. Execute the query below to review the trip information that your just completed in the previous section in the _trips_ table.
+
+```sql
+select * from trips;
+``` 
+
+> The output of the query should have at-least 1 row in the trips table, similar to the output below.
+>```
+>   id    | rider_id | driver_id | rider_name  | rider_mobile |       rider_email       | driver_name  |     driver_email      | driver_mobile | vehicle_id | cab_type_id | vendor_id |   pickup
+> _datetime   |  dropoff_datetime   | store_and_fwd_flag | rate_code_id | pickup_longitude | pickup_latitude | dropoff_longitude | dropoff_latitude | passenger_count | trip_distance | fare_amou
+> nt | extra | mta_tax | tip_amount | tolls_amount | ehail_fee | improvement_surcharge | total_amount | payment_type | trip_type | pickup_location_id | dropoff_location_id |  status   
+> ---------+----------+-----------+-------------+--------------+-------------------------+--------------+-----------------------+---------------+------------+-------------+-----------+---------
+> ------------+---------------------+--------------------+--------------+------------------+-----------------+-------------------+------------------+-----------------+---------------+----------
+> ---+-------+---------+------------+--------------+-----------+-----------------------+--------------+--------------+-----------+--------------------+---------------------+-----------
+>  2000001 |    69257 |    510909 | person69257 | +11609467790 | person69257@example.com | driver510909 | driver510909@taxi.com | +11261783124  | UDT200764  |           2 |         2 | 2019-09-
+> 15 20:41:30 | 2019-09-15 20:52:25 | N                  |            6 |       -73.881374 |        40.79103 |        -73.070448 |        40.467936 |               6 |            50 |      112.
+> 24 |   0.1 |     0.1 |       7.72 |         4.57 |         0 |                   0.6 |        42.26 |            6 |         2 |                  0 |                   0 | Completed
+> (1 row)
+>```
+
+3. Execute the query below to insert driver billing information for all the drivers, for the current daily billing cycle based on the trip information in the trips table.
+
+```sql
+insert into billing (driver_id, billing_cycle, billing_start, billing_end,  billing_amount, commissions, rides_total, description, billing_status)
+select driver_id, 2, current_date-1, current_date, sum(total_amount), 0.8, count(*), 'billing cycle 2', 'completed' from trips
+where dropoff_datetime < current_date and dropoff_datetime > (current_date-1) 
+group by driver_id;  
+```
+
+> The query should insert at-least 1 row into the billing table and the output should be similar to the output below.
+>```
+> INSERT 0 1
+>```
+
+4. Execute the query below to review the billing information that you just inserted
+
+```sql
+select * from billing where billing_cycle=2;
+```
+
+> The output of the query should retrieve at-least 1 row from the billing table, similar to the output below.
+>```
+>     id   | driver_id | billing_cycle |    billing_start    |     billing_end     |        billing_date        | billing_amount | commissions |   description   | rides_total | billing_status 
+>  --------+-----------+---------------+---------------------+---------------------+----------------------------+----------------+-------------+-----------------+-------------+----------------
+>   200001 |    510909 |             2 | 2019-09-15 00:00:00 | 2019-09-16 00:00:00 | 2019-09-16 01:59:05.634323 |          42.26 |         0.8 | billing cycle 2 |           1 | completed
+>   (1 row)
+>```
+
+5. Execute the query below to insert driver payment information for all the drivers, for the current billing cycle from based on the billing information in the billing table
+
+```sql
+insert into payment(billing_id,driver_id,billing_cycle,payment_amount,payment_date, payment_id, payment_status,description)
+select id, driver_id, billing_cycle,sum(billing_amount*commissions),billing_date, 7, 'completed','Payment cycle Sep 2019' 
+from billing where billing_cycle = 2 and billing_status = 'completed' group by id, driver_id, billing_cycle, billing_date;
+```
+
+> The query should insert at-least 1 row into the payment table and the output should be similar to the output below.
+>```
+> INSERT 0 1
+>```
+
+6. Execute the query below to review the payment information that you just inserted
+
+```sql
+select * from payment where description='Payment cycle Sep 2019';
+```
+
+> The output of the query should retrieve at-least 1 row from the payment table, similar to the output below.
+>```
+>     id   | billing_id | driver_id | billing_cycle | payment_amount |        payment_date        | payment_id | payment_status |      description       
+>  --------+------------+-----------+---------------+----------------+----------------------------+------------+----------------+------------------------
+>   200001 |     200001 |    510909 |             2 |         33.808 | 2019-09-16 01:59:05.634323 |          7 | completed      | Payment cycle Sep 2019
+>  (1 row)
+>```
+
+7. Execute the following command to close the database connection.
+
+```sql
+\q
+```
+
+## Cleanup
+
