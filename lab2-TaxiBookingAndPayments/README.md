@@ -12,7 +12,8 @@
     * [Deploy AWS Lambda Function and AWS Lambda Layer using AWS SAM template](#deploy-aws-lambda-function-an-aws-lambda-layer-using-aws-sam-template)
 * [Taxi Ride Workflow](#taxi-ride-workflow)  
     * [Taxi Trip Booking Workflow](#taxi-trip-booking-workflow)
-    
+    * [Driver Billing and Payments](#driver-billing-and-payments)
+* [Cleanup](#cleanup)
  
 ## Overview
 ![architecture.png](./assets/architecture.png)
@@ -304,3 +305,18 @@ select * from payment where description='Payment cycle Sep 2019';
 
 ## Cleanup
 
+1. Delete the SAM application. This will delete the AWS Lambda function and the AWS Lambda Layer
+
+```shell script
+aws cloudformation delete-stack --stack-name SAM-AWSDBWorkshop2019
+```
+
+> Note: Please note that it may take more than 30 minutes to delete the Amazon CloudFormation stack as it may be waiting for NetworkInterfaces associated with the Lambda Function to be cleaned up. 
+
+2. Delete the Amazon CloudFormation template.
+
+ ```shell script
+ aws cloudformation delete-stack --stack-name $AWSDBWORKSHOP_CFSTACK_NAME
+ ```
+
+CONGRATULATIONS!! You have now completed the lab.
