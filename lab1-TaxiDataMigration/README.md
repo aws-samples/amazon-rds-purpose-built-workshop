@@ -61,7 +61,10 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
  5. In the Cloud9 terminal environment Run the below command to clone the github repository.
 
-    `#git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git .`
+    ```shell script
+    cd ~/environment
+    git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git .
+    ```
 
  6. Install postgresql client and related libraries in the Cloud9 environment. This is required to use the postgresql command line utility psql.
 
@@ -215,7 +218,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
  6. Under Table Mapping section, enter as below:
   - choose JSON Edior and copy & paste the following transformation code.
   
-      ```
+      ```json
       {  
       "rules": [  
       {  
@@ -323,7 +326,7 @@ After task is created, please monitor the ask, by looking at the console as show
  6. Under Table Mapping section, enter as below:
   - choose JSON Edior and copy & paste the following mapping code.
   
-      ```
+      ```json
       {
       "rules": [
         {
