@@ -207,7 +207,7 @@ python3 driver-accept-trip.py
 ```
 
 
-## Driver Billing and Payments
+### Driver Billing and Payments
 
 1. Copy and paste the commands below to connect to the Amazon Aurora database. Enter the password string for the the Aurora database when prompted.
 
