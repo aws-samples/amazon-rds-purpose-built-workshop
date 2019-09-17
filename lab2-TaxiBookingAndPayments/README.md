@@ -203,7 +203,7 @@ python3 driver-accept-trip.py
 3. Copy and paste the following command as a driver to accept a trip. The script will prompt for the 'tripinfo' value. Enter the same 'tripinfo' value that you provided as input to the previous python script you just ran as a driver to accept a trip.
 
 ```shell script
-python3 driver-accept-trip.py
+python3 driver-complete-trip.py
 ```
 
 
