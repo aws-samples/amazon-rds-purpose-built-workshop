@@ -63,7 +63,7 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
     ```shell script
     cd ~/environment
-    git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git .
+    git clone https://github.com/aws-samples/amazon-rds-purpose-built-workshop.git
     ```
 
  6. Install postgresql client and related libraries in the Cloud9 environment. This is required to use the postgresql command line utility psql.
