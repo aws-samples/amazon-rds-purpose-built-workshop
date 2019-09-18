@@ -6,7 +6,7 @@
     * [Install JQ](#install-jq)
     * [Update SAM CLI](#update-sam-cli)
     * [Install AWS SDK for Python](#install-aws-sdk-for-python)
-* [Enable Amazon Dynamodb Streams](#enable-amazon-dynamodb-streams)
+* [Enable Amazon DynamoDB Streams](#enable-amazon-dynamodb-streams)
 * [Deploying the AWS Lambda Function](#deploying-aws-lambda-function) 
     * [Packaging PG8000 binaries](#packaging-pg8000-binaries)
     * [Deploy AWS Lambda Function and AWS Lambda Layer using AWS SAM template](#deploy-aws-lambda-function-an-aws-lambda-layer-using-aws-sam-template)
@@ -24,7 +24,7 @@
 
 ### Install JQ
 
-1. Open the AWS Management Console for [AWS Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home/account). You will will leverage AWS Cloud9 IDE for throughout this lab for running scripts, deploying AWS SAM (Serverless Application Model) templates, execute SQL queries etc.
+1. Open the AWS Management Console for [AWS Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home/account). You will leverage AWS Cloud9 IDE throughout this lab for running scripts, deploying AWS SAM (Serverless Application Model) templates, execute SQL queries etc.
 2. Click on __Open IDE__ for the AWS Cloud9 IDE that was created as part of the Amazon Cloudformation teamplate that you deployed
 3. Open a terminal window in the  AWS Cloud9 IDE by clicking on __Window__ from the menu bar on the top and select __New Terminal__
 4. Copy and paste the command below in the terminal window to install [JQ](https://stedolan.github.io/jq/) 
@@ -60,9 +60,9 @@ pip3 install boto3 --user
 ###
 1. Open the AWS Management Console for CloudFormation from [here](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2).  
 2. In the upper-right corner of the AWS Management Console, confirm you are in the US West (Oregon) Region.  
-3. Click on _Stacks_ in the navigation pane on the right.  
-4. Under _Stacks_ copy and make a note of the name of the Amazon CloudFormation stack (e.g. _CF-AWSDBWorkshop2019_) that you deployed in the previous lab.
-5. Substitute the string (_<substitue-name-of-copied-cf-stack-name>_) in the command below with the name of the Amazon CloudFormation stack. Copy and paste the following commands in the terminal window in the AWS Cloud9 IDE to set the environment variable _$AWSDBWORKSHOP_CFSTACK_NAME_ . 
+3. Click on __Stacks__ in the navigation pane on the right.  
+4. Under __Stacks__ copy and make a note of the name of the Amazon CloudFormation stack (e.g. _CF-AWSDBWorkshop2019_) that was deployed in the previous lab.
+5. Substitute the string (_<substitute-name-of-copied-cf-stack-name>_) in the command below with the name of the Amazon CloudFormation stack. Copy and paste the following commands in the terminal window in the AWS Cloud9 IDE to set the environment variable _$AWSDBWORKSHOP_CFSTACK_NAME_ . 
 
 ```shell script
 AWSDBWORKSHOP_CFSTACK_NAME="<substitue-name-of-copied-cf-stack-name>"
@@ -73,10 +73,10 @@ echo $AWSDBWORKSHOP_CFSTACK_NAME
 
 > Note: Ensure that the name of the Amazon CloudFormation stack that you deployed in the previous lab printed as an output in the terminal (e.g. _CF-AWSDBWorkshop2019_)
 
-## Enable Amazon Dynamodb Streams
-In this section you will enable Amazon Dynamodb stream for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_ that was created as part of the Amazon CloudFormaiton teample.
+## Enable Amazon DynamoDB Streams
+In this section you will enable Amazon DynamoDB stream for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_ that was created as part of the Amazon CloudFormation template.
 
-5. Copy and paste the commands below in the terminal window to enable streams for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_
+- Copy and paste the commands below in the terminal window to enable streams for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_
 ```shell script
 STREAM_ID=$(aws dynamodb update-table --table-name aws-db-workshop-trips --stream-specification StreamEnabled=true,StreamViewType=NEW_AND_OLD_IMAGES | jq '.TableDescription.LatestStreamArn' | cut -d'/' -f4)
 STREAM_NAME=stream/${STREAM_ID::-1}
@@ -88,11 +88,11 @@ echo $AWSDBWORKSHOP_DDB_STREAM_NAME
 Now that you have enabled the Amazon DynamoDB stream the next step is to deploy the AWS Lambda function that will process the records from the stream.
 
 ## Deploying AWS Lambda Function
-In this section we will be using AWS Serverless Applicaiton Model ([SAM]((https://aws.amazon.com/serverless/sam/))) CLI to deploy a Lambda Function within the same Amazon Virtual Private Network([VPC](https://aws.amazon.com/vpc/)). The SAM deployment will also include a python interface to the PostgreSQL database engine as an AWS Lambda Layer. This Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). Only when a trip is completed (denoted by the _STATUS_ attribute in the trip item/ record) the function inserts information into a relational table (_trips_) in Amazon Aurora database. 
+In this section you will be using AWS Serverless Application Model ([SAM]((https://aws.amazon.com/serverless/sam/))) CLI to deploy a Lambda Function within the same Amazon Virtual Private Network([VPC](https://aws.amazon.com/vpc/)). The SAM deployment will also include a python interface to the PostgreSQL database engine as an AWS Lambda Layer. This Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). Only when a trip is completed (denoted by the _STATUS_ attribute in the trip item/ record) the function inserts information into a relational table (_trips_) in Amazon Aurora database. 
 
 ### Packaging the PG8000 binaries 
 
-In this section you will download and package the binaries for [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine. The package will deployed as an AWS Lambda Layer.
+In this section you will download and package the binaries for [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine. The package will be deployed as an AWS Lambda Layer.
 
 - Copy and paste the commands below in the terminal window in the Cloud9 IDE.
 
@@ -222,7 +222,7 @@ echo $AURORADBMASTERUSER_NAME
 sudo psql -h $AURORACLUSTERENDPOINT_NAME -U $AURORADBMASTERUSER_NAME -d $AURORADB_NAME
 ```
 
-2. Execute the query below to review the trip information that your just completed in the previous section in the _trips_ table.
+2. Execute the query below to review the trip information that you just completed in the previous section in the _trips_ table.
 
 ```sql
 select * from trips;
