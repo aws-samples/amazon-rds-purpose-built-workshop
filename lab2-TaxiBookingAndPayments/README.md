@@ -24,7 +24,7 @@
 
 ### Install JQ
 
-1. Open the AWS Management Console for [AWS Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home?region=us-west-2#). You will will leverage AWS Cloud9 IDE for throughout this lab for running scripts, deploying AWS SAM (Serverless Application Model) templates, execute SQL queries etc.
+1. Open the AWS Management Console for [AWS Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home/account). You will will leverage AWS Cloud9 IDE for throughout this lab for running scripts, deploying AWS SAM (Serverless Application Model) templates, execute SQL queries etc.
 2. Click on __Open IDE__ for the AWS Cloud9 IDE that was created as part of the Amazon Cloudformation teamplate that you deployed
 3. Open a terminal window in the  AWS Cloud9 IDE by clicking on __Window__ from the menu bar on the top and select __New Terminal__
 4. Copy and paste the command below in the terminal window to install [JQ](https://stedolan.github.io/jq/) 
@@ -128,7 +128,7 @@ sam validate
 
 2. To package the AWS SAM application, copy and paste the commands below in the terminal window. This will create a template-out.yaml file is the same folder and will upload the packaged binaries to the specified Amazon S3 bucket.
 
-```
+```shell script
 cd ~/environment/amazon-rds-purpose-built-workshop/src/ddb-stream-processor
 S3_BUCKETNAME=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="S3bucketName") | .OutputValue')
 echo $S3_BUCKETNAME
@@ -246,9 +246,9 @@ select * from trips;
 
 ```sql
 insert into billing (driver_id, billing_cycle, billing_start, billing_end,  billing_amount, commissions, rides_total, description, billing_status)
-select driver_id, 2, current_date-1, current_date, sum(total_amount), 0.8, count(*), 'billing cycle 2', 'completed' from trips
-where dropoff_datetime < current_date and dropoff_datetime > (current_date-1) 
-group by driver_id;  
+select driver_id, 2, current_date, current_date+1, sum(total_amount), 0.8, count(*), 'billing cycle 2', 'completed' from trips                                        
+where dropoff_datetime < current_date+1 and dropoff_datetime > current_date                                                                                             
+group by driver_id; 
 ```
 
 > The query should insert at-least 1 row into the billing table and the output should be similar to the output below.
@@ -313,7 +313,17 @@ aws cloudformation delete-stack --stack-name SAM-AWSDBWorkshop2019
 
 > Note: Please note that it may take more than 30 minutes to delete the Amazon CloudFormation stack as it may be waiting for NetworkInterfaces associated with the Lambda Function to be cleaned up. 
 
-2. Delete the Amazon CloudFormation template.
+2. Delete all the objects in the S3 bucket you created as part of the Amazon CloudFormation template.
+
+```shell script
+cd ~/environment
+S3_BUCKETNAME=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="S3bucketName") | .OutputValue')
+aws s3 rm s3://$S3_BUCKETNAME --recursive
+```
+
+4. Delete the DMS tasks and endpoints you created in Lab 1.
+
+3. Delete the Amazon CloudFormation template.
 
  ```shell script
  aws cloudformation delete-stack --stack-name $AWSDBWORKSHOP_CFSTACK_NAME
