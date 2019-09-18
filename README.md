@@ -1,16 +1,16 @@
 ## Amazon RDS Purpose Built Workshop
 
-A tutorial for developers, DBAs and data engineers to get hands-on experience on  how to migrate relational data to AWS purpose-built databases  such as Amazon DynamoDB, Amazon Aurora using AWS DMS and build data processing applications on top of it.
+A tutorial for developers, DBAs and data engineers to get hands-on experience on how to migrate relational data to AWS purpose-built databases such as Amazon DynamoDB, Amazon Aurora using AWS DMS and build data processing applications on top of it.
 
 
 
 # Overview: Working with AWS Purpose-Built databases
 
-The days of one-size-fits-all, monolithic databases are behind us. Database design and management requires a different mindset in AWS when compared to traditional relational database management system (RDBMS) design. In this workshop, we will demonstrate on how to leverage  both relational (Amazon Aurora) and non-relational databases (Amazon DynamoDB) that are purpose-built to handle the specific needs of an application. for illustrative purpose, we will leverage a relational schema used by the taxi application.
+The days of one-size-fits-all, monolithic databases are behind us. Database design and management requires a different mindset in AWS when compared to traditional relational database management system (RDBMS) design. In this workshop, we will demonstrate on how to leverage both relational (Amazon Aurora) and non-relational databases (Amazon DynamoDB) that are purpose-built to handle the specific needs of an application. For illustrative purpose, we will leverage a relational schema used by the taxi application.
 
 
 ## Pre-requisites
-You need to have AWS account with  IAM administrator privileges. We recommend to deploy the solution for Lab 1 using CloudFormation template while we go through the presentation. This is to save your time for walk-through. Please complete the following steps to deploy solution. The CloudFormation will take about 10 minutes to complete.
+You need to have AWS account with IAM administrator privileges. We recommend to deploy the solution for Lab 1 using CloudFormation template while we go through the presentation. This is to save your time for walk-through. Please complete the following steps to deploy solution. The CloudFormation will take about 15 minutes to complete.
  
 1. Sign into the AWS Management Console [us-west-2](https://console.aws.amazon.com/console/home?region=us-west-2).
 
