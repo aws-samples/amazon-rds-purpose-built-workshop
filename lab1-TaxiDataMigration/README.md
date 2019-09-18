@@ -91,19 +91,22 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
  
   > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
-    ```shell script
-     cd ~/environment/amazon-rds-purpose-built-workshop/
-     sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_taxi_schema.sql
-    ```
 
+    ```shell script
+    cd ~/environment/amazon-rds-purpose-built-workshop/
+    sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_taxi_schema.sql
+    ```
    e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
+
+
+   > **_NOTE:_** You can ignore the commit error at the end of the script.
    
   You can verify if the tables are created by running the below command after logging via psql.
 
-      ```shell script
+     ```shell script
       \dt  #list the tables in the database
       \d trips #describe a table 
-      ```
+    ```
 
   ![](./assets/cloud9-2.png)
 
