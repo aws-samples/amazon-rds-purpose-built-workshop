@@ -92,8 +92,8 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
   > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
     ```shell script
-    cd ~/environment/amazon-rds-purpose-built-workshop/
-    sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_taxi_schema.sql
+     cd ~/environment/amazon-rds-purpose-built-workshop/
+     sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_taxi_schema.sql
     ```
 
    e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
@@ -181,9 +181,13 @@ Click **Create endpoint**. Enter the values as follows:
   ![](./assets/dms6.png) 
 
   Please leave the rest of the settings default. Make sure that the IAM Role ARN information is correct. Click **Create endpoint**.
+
+  
+   > **_NOTE:_** Please Click on top right on the DMS Console **Return to the old console experience** if you see the **Create Endpoint** is disabled for some reasons.
+
    
   
- After creating the endpoint, you should test the connection as shown below. Choose the DMS instance created by the CloudFormation stack.
+ After creating the endpoint, you should **test the connection** as shown below. Choose the DMS instance created by the CloudFormation stack .
 
   ![](./assets/dms7.png) 
 
