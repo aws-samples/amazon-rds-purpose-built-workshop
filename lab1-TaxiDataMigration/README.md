@@ -32,7 +32,7 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
 ## Preparing the Environment
 
-1.  Check if the CloudFormation Stack has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#). You will see two Stacks created as shown below.  Click on the **Stack** that was created with the name **mod-** or some custom name like CF-AWSDBxxx. The Stack with the name **aws-cloud9-xx** is a child stack and is used for launching Cloud9 environment. and look at the **Outputs** section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
+1.  Check if the CloudFormation Stack has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#). You will see two Stacks created as shown below.  Click on the **Stack** that is created with the name **mod-** or some custom name like CF-AWSDBxxx. This is a parent stack. The Stack with the name **aws-cloud9-xx** is a child stack and is used for launching Cloud9 environment. Click the parent stack and look at the **Outputs** section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
 
 ![](./assets/cfn-lab1.png)
 
@@ -40,7 +40,7 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
 
 
-2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries using SQL Client of your choice. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query output from source (Oracle) schema are given below for your reference.
+2. **Optional Step** Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries using SQL Client of your choice. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query output from source (Oracle) schema are given below for your reference.
     
 ```sql
 SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY object_type;
@@ -110,7 +110,7 @@ e.g. sudo psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb
     sudo psql -h <Aurora cluster endpoint> -U username -d taxidb -f ./src/create_taxi_schema.sql
 ```
 
-e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_nyc_taxi_schema.sql
+e.g. psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb -f ./src/create_taxi_schema.sql
 
 
 > **_NOTE:_** You can ignore the commit error at the end of the script.
@@ -317,7 +317,7 @@ After task is created, please monitor the task, by looking at the console as sho
 
 ![](./assets/dms-task1-4.png) 
 
-> **_NOTE:_** This task may for 10 to 15 minutes.  Please proceed to the next step.
+> **_NOTE:_** This task may for 12 to 15 minutes.  Please proceed to the next step.  After a full load, you will see 128,714 Rows are migrated.
 
 ## Creating Replication Task for Aurora Migration
  Now, we will migrate four tables (Riders, Drivers, Payment and Billing) from Oracle to Aurora PostgreSQL. We have already created the DDL for those tables in Aurora as part of the environment setup.
@@ -349,7 +349,7 @@ After task is created, please monitor the task, by looking at the console as sho
  ![](./assets/dms-task2-2.png)
 
  6. Under Table Mapping section, enter as below:
-  - choose **JSON Editor** and copy & paste the following mapping code.
+  - choose **JSON Editor** (or enable JSON Editing) and copy & paste the following mapping code.
   
       ```json
       {
@@ -463,5 +463,10 @@ After task is created, please monitor the task, by looking at the console as sho
 
 ![](./assets/dms-task2-6.png)
 
+
+ Please check if both the DMS tasks are completed. You will see the below output.
+ 
+ -**ora2ddb** task status as "Load Completed" with full load row count as 128,714. 
+ -**ora2aur** task status as "Load Completed" with Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000)
 
 **Congrats!!** You have successfully completed the Lab1. Now you can proceed to [Lab 2](../lab2-TaxiBookingAndPayments/). 
