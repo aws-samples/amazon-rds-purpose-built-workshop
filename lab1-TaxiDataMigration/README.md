@@ -11,6 +11,7 @@
     * [Monitoring Replication Task for DynamoDB](#Monitoring-Replication-Task-for-DynamoDB )
 * [Creating Replication Task for Aurora Migration](#Creating-Replication-Task-for-Aurora-Migration) 
     * [Monitoring Replication Task for DynamoDB](#Monitoring-Replication-Task-for-Aurora )
+* [Final Validation of DMS Tasks](#Final-Validation-of-DMS-Tasks) 
 
 ## Overview
 
@@ -464,9 +465,12 @@ After task is created, please monitor the task, by looking at the console as sho
 ![](./assets/dms-task2-6.png)
 
 
+## Final Validation of DMS Tasks
+
  Please check if both the DMS tasks are completed. You will see the below output.
 
-**ora2ddb** task status as "Load Completed" with full load row count as 128,714. 
-**ora2aur** task status as "Load Completed" with Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000)
+1. **ora2ddb** task status as "Load Completed" with full load row count as 128,714
+
+2. **ora2aur** task status as "Load Completed" with Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000)
 
 **Congrats!!** You have successfully completed the Lab1. Now you can proceed to [Lab 2](../lab2-TaxiBookingAndPayments/). 
