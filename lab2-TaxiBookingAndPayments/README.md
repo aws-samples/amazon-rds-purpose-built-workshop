@@ -61,7 +61,7 @@ pip3 install boto3 --user
 2. In the upper-right corner of the AWS Management Console, confirm you are in the US West (Oregon) Region.  
 3. Click on __Stacks__ in the navigation pane on the right.  
 4. Under __Stacks__ copy and make a note of the name of the Amazon CloudFormation stack (e.g. _mod-aa8afde9acf04c7f_) that was deployed in the previous lab.
-5. Substitute the string (_ <substitute-name-of-copied-cf-stack-name> _) in the command below with the name of the Amazon CloudFormation stack. 
+5. Substitute the string (_ '<substitute-name-of-copied-cf-stack-name>' _) in the command below with the name of the Amazon CloudFormation stack. 
 
 ```shell script
 AWSDBWORKSHOP_CFSTACK_NAME="<substitue-name-of-copied-cf-stack-name>"
