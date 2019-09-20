@@ -25,7 +25,7 @@
 ### Install JQ
 
 1. Open the AWS Management Console for [AWS Cloud9](https://us-west-2.console.aws.amazon.com/cloud9/home/account). You will leverage AWS Cloud9 IDE throughout this lab for running scripts, deploying AWS SAM (Serverless Application Model) templates, execute SQL queries etc.
-2. Click on __Open IDE__ for the AWS Cloud9 IDE that was created as part of the Amazon Cloudformation teamplate that you deployed
+2. Click on __Open IDE__ for the AWS Cloud9 IDE that was created as part of the Amazon Cloudformation teamplate that was deployed
 3. Open a terminal window in the  AWS Cloud9 IDE by clicking on __Window__ from the menu bar on the top and select __New Terminal__
 4. Copy and paste the command below in the terminal window to install [JQ](https://stedolan.github.io/jq/) 
 
@@ -158,7 +158,7 @@ aws s3 ls s3://$S3_BUCKETNAME
 > 2019-09-15 16:39:56      71954 d3eec91527b02d78de30ae42198cd0c0
 > ```
 
-5. Substitute the string (_<substitue-with-the-password-of-aurora-database>_) with password string for the Aurora database. Copy and paste the commands to deploy the AWS Lambda Function along with the AWS Lambda Layer. The AWS Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). The AWS Lambda Layer include the [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine.
+5. Set the variable from the output of the Amazon CloudFormation template that was deployed
 
 ```shell script
 cd ~/environment/amazon-rds-purpose-built-workshop/src/ddb-stream-processor
@@ -174,8 +174,12 @@ echo $LAMBDASECURITYGROUP_ID
 LAMBDASUBNET1_ID=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="LambdaSubnet1") | .OutputValue')
 LAMBDASUBNET2_ID=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHOP_CFSTACK_NAME | jq -r '.Stacks[].Outputs[] | select(.OutputKey=="LambdaSubnet2") | .OutputValue')
 echo $LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID
+```
 
-sam deploy --template-file template-out.yaml --capabilities CAPABILITY_IAM --stack-name SAM-AWSDBWorkshop2019 --parameter-overrides LambdaLayerNameParameter=aws-db-workshop-pg8000-layer DDBStreamName=$AWSDBWORKSHOP_DDB_STREAM_NAME SecurityGroupIds=$LAMBDASECURITYGROUP_ID VpcSubnetIds=$LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID DatabaseName=$AURORADB_NAME DatabaseHostName=$AURORACLUSTERENDPOINT_NAME DatabaseUserName=$AURORADBMASTERUSER_NAME DatabasePassword=<substitue-with-the-password-of-aurora-database>
+6. Substitute the string (_substitue-with-the-password-of-aurora-database_) with password string for the Aurora database. Copy and paste the commands to deploy the AWS Lambda Function along with the AWS Lambda Layer. The AWS Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). The AWS Lambda Layer include the [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine.
+
+```shell script
+sam deploy --template-file template-out.yaml --capabilities CAPABILITY_IAM --stack-name SAM-AWSDBWorkshop2019 --parameter-overrides LambdaLayerNameParameter=aws-db-workshop-pg8000-layer DDBStreamName=$AWSDBWORKSHOP_DDB_STREAM_NAME SecurityGroupIds=$LAMBDASECURITYGROUP_ID VpcSubnetIds=$LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID DatabaseName=$AURORADB_NAME DatabaseHostName=$AURORACLUSTERENDPOINT_NAME DatabaseUserName=$AURORADBMASTERUSER_NAME DatabasePassword="substitue-with-the-password-of-aurora-database"
 ```
 
 >Note: This may take few minutes. Ensure that the SAM teamplate was successfully deployed. Look for the following line in the terminal as output
