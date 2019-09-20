@@ -465,8 +465,8 @@ After task is created, please monitor the task, by looking at the console as sho
 
 
  Please check if both the DMS tasks are completed. You will see the below output.
- 
- -**ora2ddb** task status as "Load Completed" with full load row count as 128,714. 
- -**ora2aur** task status as "Load Completed" with Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000)
+
+**ora2ddb** task status as "Load Completed" with full load row count as 128,714. 
+**ora2aur** task status as "Load Completed" with Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000)
 
 **Congrats!!** You have successfully completed the Lab1. Now you can proceed to [Lab 2](../lab2-TaxiBookingAndPayments/). 
