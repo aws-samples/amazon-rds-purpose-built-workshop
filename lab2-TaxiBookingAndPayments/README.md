@@ -39,7 +39,6 @@ sudo yum -y install jq gettext
 - To update the AWS SAM CLI to the latest version copy paste the following commands in the terminal window in the AWS Cloud9 IDE
    
  ```shell script
-
 cd ~/environment
 pip install --user --upgrade awscli aws-sam-cli
 sam --version
@@ -61,17 +60,22 @@ pip3 install boto3 --user
 1. Open the AWS Management Console for CloudFormation from [here](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2).  
 2. In the upper-right corner of the AWS Management Console, confirm you are in the US West (Oregon) Region.  
 3. Click on __Stacks__ in the navigation pane on the right.  
-4. Under __Stacks__ copy and make a note of the name of the Amazon CloudFormation stack (e.g. _CF-AWSDBWorkshop2019_) that was deployed in the previous lab.
-5. Substitute the string (_<substitute-name-of-copied-cf-stack-name>_) in the command below with the name of the Amazon CloudFormation stack. Copy and paste the following commands in the terminal window in the AWS Cloud9 IDE to set the environment variable _$AWSDBWORKSHOP_CFSTACK_NAME_ . 
+4. Under __Stacks__ copy and make a note of the name of the Amazon CloudFormation stack (e.g. _mod-aa8afde9acf04c7f_) that was deployed in the previous lab.
+5. Substitute the string (_ <substitute-name-of-copied-cf-stack-name> _) in the command below with the name of the Amazon CloudFormation stack. 
 
 ```shell script
 AWSDBWORKSHOP_CFSTACK_NAME="<substitue-name-of-copied-cf-stack-name>"
+```   
+
+6. Copy and paste the following commands in the terminal window in the AWS Cloud9 IDE to set the environment variable _$AWSDBWORKSHOP_CFSTACK_NAME_ . 
+
+```shell script
 echo "export AWSDBWORKSHOP_CFSTACK_NAME=${AWSDBWORKSHOP_CFSTACK_NAME}" >> ~/.bash_profile
 . ~/.bash_profile
 echo $AWSDBWORKSHOP_CFSTACK_NAME
 ```   
 
-> Note: Ensure that the name of the Amazon CloudFormation stack that you deployed in the previous lab printed as an output in the terminal (e.g. _CF-AWSDBWorkshop2019_)
+> Note: Ensure that the name of the Amazon CloudFormation stack that you deployed in the previous lab printed as an output in the terminal (e.g. _mod-aa8afde9acf04c7f_)
 
 ## Enable Amazon DynamoDB Streams
 In this section you will enable Amazon DynamoDB stream for the Amazon DynamoDB Tables named _'aws-db-workshop-trips'_ that was created as part of the Amazon CloudFormation template.
@@ -84,6 +88,11 @@ echo "export AWSDBWORKSHOP_DDB_STREAM_NAME=${STREAM_NAME}" >> ~/.bash_profile
 . ~/.bash_profile
 echo $AWSDBWORKSHOP_DDB_STREAM_NAME
 ```
+
+> Note: The output will be similar to the following 
+>```
+>stream/2019-09-18T20:18:33.343
+>```
 
 Now that you have enabled the Amazon DynamoDB stream the next step is to deploy the AWS Lambda function that will process the records from the stream.
 
