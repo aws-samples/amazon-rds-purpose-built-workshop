@@ -32,24 +32,27 @@ For billing and payment use cases, we will migrate the **Billing**, **Riders**, 
 
 ## Preparing the Environment
 
-1.  Check if the CloudFormation Stack has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#) and Click on the **Stack** that was created earlier and look at the **Outputs** section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
+1.  Check if the CloudFormation Stack has successfully created the AWS resources. Go to [CloudFormation](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#). You will see two Stacks created as shown below.  Click on the **Stack** that was created with the name **mod-** or some custom name like CF-AWSDBxxx. The Stack with the name **aws-cloud9-xx** is a child stack and is used for launching Cloud9 environment. and look at the **Outputs** section. Please note down the Cluster DNS details of Aurora, Oracle RDS details for connectivity. We suggest to copy paste all the output values in a notepad .These details will be used in the subsequent steps as well as in Lab 2.
+
+![](./assets/cfn-lab1.png)
 
 ![](./assets/cfn6.png)
 
 
 
-2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries against taxi schema. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query for source (Oracle) schema are given below.
+2. (Optional) Test the connectivity to Oracle RDS from your laptop using SQL Client. You may want to explore the source Oracle schema by running some sample queries using SQL Client of your choice. Alternatively, you can also explore the source relational schema [data model](./assets/taxi-data-model.png) and [sample output](./assets/oracle-taxi-schema.txt). e.g. sample query output from source (Oracle) schema are given below for your reference.
     
 ```sql
-SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY owner,object_type;
+SELECT owner,OBJECT_TYPE, Count(*) FROM DBA_OBJECTS WHERE OWNER IN ('TAXI') GROUP BY object_type;
 OBJECT_TYPE  COUNT(*)
  TRIGGER 3
  LOB   2
  TABLE 11
  SEQUENCE 5
  INDEX 17
+
  Select count(*) from taxi.trips;
-   Count(*) 
+  Count(*) 
   128714 
 ```
          
@@ -75,7 +78,7 @@ sudo yum install -y postgresql95 postgresql95-contrib postgresql95-devel
 7. Connect to target Aurora PostgreSQL using psql command as shown below. For more options and commands, refer to [psql](https://www.postgresql.org/docs/9.6/app-psql.html) documentation
 
 ```shell script
-sudo psql -h <Aurora cluster endpoint> -U username -d taxidb `
+sudo psql -h <Aurora cluster endpoint> -U username -d taxidb 
 ```
 
 e.g. sudo psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb
@@ -143,9 +146,10 @@ Click **Create endpoint**. Enter the values as follows:
 |Server name | Enter the Oracle RDS DNS|
 |Port | 1521|
 |Username | Enter as dbadmin|
-|Password| Enter the password that you entered in the CloudFormation parameter section. (Note:default password: oraadmin123) |
+|Password| Enter the default password: oraadmin123 unless you have provided a different password via CloudFormation parameter section |
 |SID| ORCL|
 
+> **_NOTE:_** You can also choose the corresponding RDS instance by clicking the option "Select RDS DB Instance".
 
 ![](./assets/dms2.png) 
 
@@ -168,9 +172,11 @@ Click **Create endpoint**. Enter the values as follows:
 |Server name | Enter the Aurora Cluster DNS|
 |Port | 5432|
 |Username | Enter as auradmin|
-|Password| Enter the password you entered in the CloudFormation template. (Note: default password: auradmin123) |
+|Password| Enter the default password: auradmin123 unless you have provided a different password via CloudFormation parameter section |
 |Database Name| taxidb| 
  
+> **_NOTE:_** You can also choose the corresponding Aurora instance by clicking the option "Select RDS DB Instance".
+
 Please leave the rest of the settings default. Make sure that the Aurora cluster DNS, database name, port, and user information are correct. Click **Create endpoint**.
 
 ![](./assets/dms4.png) 
@@ -237,7 +243,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
 ![](./assets/dms-task1-2.png) 
 
  6. Under Table Mapping section, enter as below:
- - choose **JSON Editor** and copy & paste the following transformation code.
+ - choose **JSON Editor** (or enable JSON Editing) and copy & paste the following transformation code.
   
 ```json
    {  
