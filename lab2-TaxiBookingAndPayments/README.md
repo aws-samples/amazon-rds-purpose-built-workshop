@@ -176,7 +176,7 @@ LAMBDASUBNET2_ID=$(aws cloudformation describe-stacks --stack-name $AWSDBWORKSHO
 echo $LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID
 ```
 
-6. Substitute the string (_substitue-with-the-password-of-aurora-database_) with password string for the Aurora database. Copy and paste the commands to deploy the AWS Lambda Function along with the AWS Lambda Layer. The AWS Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). The AWS Lambda Layer include the [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine.
+6. Substitute the string (_substitue-with-the-password-of-aurora-database_) with password string (without double quotes) for the Aurora database. Copy and paste the commands to deploy the AWS Lambda Function along with the AWS Lambda Layer. The AWS Lambda function will read the taxi trip information from the Amazon DynamoDB stream as they are inserted / updated in the Amazon DynamoDB table ('aws-db-workshop-trips'). The AWS Lambda Layer include the [PG8000](https://pypi.org/project/pg8000/) - a python interface to the PostgreSQL database engine.
 
 ```shell script
 sam deploy --template-file template-out.yaml --capabilities CAPABILITY_IAM --stack-name SAM-AWSDBWorkshop2019 --parameter-overrides LambdaLayerNameParameter=aws-db-workshop-pg8000-layer DDBStreamName=$AWSDBWORKSHOP_DDB_STREAM_NAME SecurityGroupIds=$LAMBDASECURITYGROUP_ID VpcSubnetIds=$LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID DatabaseName=$AURORADB_NAME DatabaseHostName=$AURORACLUSTERENDPOINT_NAME DatabaseUserName=$AURORADBMASTERUSER_NAME DatabasePassword="substitue-with-the-password-of-aurora-database"
@@ -207,7 +207,7 @@ python3 rider-book-trip.py
 > 0724662,2019-09-15T20:41:30.455031Z
 >``` 
 
-2. Copy and paste the following command as a driver to accept a trip. The script will prompt for the 'tripinfo' value. Enter the value from the output of the previous python script you just ran as a rider to book a new trip.
+2. Copy and paste the following command as a driver to accept a trip. The script will prompt for the 'tripinfo' value. Enter the value (without double quotes) from the output of the previous python script you just ran as a rider to book a new trip.
 
 ```shell script
 python3 driver-accept-trip.py
