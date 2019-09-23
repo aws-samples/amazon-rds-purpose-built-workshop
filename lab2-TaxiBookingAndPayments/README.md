@@ -181,11 +181,16 @@ echo $LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID
 ```shell script
 sam deploy --template-file template-out.yaml --capabilities CAPABILITY_IAM --stack-name SAM-AWSDBWorkshop2019 --parameter-overrides LambdaLayerNameParameter=aws-db-workshop-pg8000-layer DDBStreamName=$AWSDBWORKSHOP_DDB_STREAM_NAME SecurityGroupIds=$LAMBDASECURITYGROUP_ID VpcSubnetIds=$LAMBDASUBNET1_ID,$LAMBDASUBNET2_ID DatabaseName=$AURORADB_NAME DatabaseHostName=$AURORACLUSTERENDPOINT_NAME DatabaseUserName=$AURORADBMASTERUSER_NAME DatabasePassword="substitue-with-the-password-of-aurora-database"
 ```
-
 >Note: This may take few minutes. Ensure that the SAM teamplate was successfully deployed. Look for the following line in the terminal as output
 >```
 >Successfully created/updated stack - SAM-AWSDBWorkshop2019
 >```
+
+7. Deactivate the virtual environment
+
+```shell script
+deactivate
+```
 
 Now you have successfully deployed the Lambda function.
  
