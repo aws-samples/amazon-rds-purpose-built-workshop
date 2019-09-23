@@ -102,7 +102,7 @@ e.g. sudo psql -h xxxxx.us-west-2.rds.amazonaws.com -U auradmin  -d taxidb
 
 > Note: As you have figured out, there are no tables created in Aurora database yet.
   
-8. Please note that before we migrate data from Oracle RDS to Aurora, we need to setup a target schema. We recommend to leverage [AWS SCT]([https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Welcome.html) to migrate schema from Oracle to PostgreSQL. However, for this workshop, we have provided a converted schema to use in the target Aurora environment.  Please execute the following command to create the schema.
+8. Please note that before we migrate data from Oracle RDS to Aurora, we need to setup a target schema. We recommend to leverage [AWS SCT](https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Welcome.html) to migrate schema from Oracle to PostgreSQL. However, for this workshop, we have provided a converted schema to use in the target Aurora environment.  Please execute the following command to create the schema.
  
 > **_NOTE:_** Make sure you execute the  command from the root directory of the cloned github repository (or) provide a absolute file path.
 
@@ -318,7 +318,7 @@ After task is created, please monitor the task, by looking at the console as sho
 
 ![](./assets/dms-task1-4.png) 
 
-> **_NOTE:_** This task may for 12 to 15 minutes.  Please proceed to the next step.  After a full load, you will see 128,714 Rows are migrated.
+> **_NOTE:_** This task may take 12 to 15 minutes.  Please proceed to the next step.  After a full load, you will see 128,714 Rows are migrated.
 
 ## Creating Replication Task for Aurora Migration
  Now, we will migrate four tables (Riders, Drivers, Payment and Billing) from Oracle to Aurora PostgreSQL. We have already created the DDL for those tables in Aurora as part of the environment setup.
@@ -469,8 +469,8 @@ After task is created, please monitor the task, by looking at the console as sho
 
  Please check if both the DMS tasks are completed. You will see the below output.
 
-1. **ora2ddb** task status as "Load Completed" with full load row count as 128,714
+1. **ora2ddb** task status as "Load Completed". TRIPS table full load row count as 128,714
 
-2. **ora2aur** task status as "Load Completed" with Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000)
+2. **ora2aur** task status as "Load Completed". Table and Fullload count should be: Drivers (Count-100001), Payment (Count-60001), Billing (Count -600001), Riders (Count-100000) 
 
 **Congrats!!** You have successfully completed the Lab1. Now you can proceed to [Lab 2](../lab2-TaxiBookingAndPayments/). 

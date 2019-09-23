@@ -1,4 +1,5 @@
 set search_path=public;
+\set AUTOCOMMIT off
 
 /* This file contains DDL for creating relational schema in PostgreSQL. We will also populate the reference tables with values. for some of the tables that uses serial data type, the serial data 
 is adjusted to higher value so that it doesn't conflict with the migrated data from source */
@@ -144,3 +145,4 @@ create table trips(
  SELECT pg_catalog.setval(pg_get_serial_sequence('billing', 'id'),max(200000));
  SELECT pg_catalog.setval(pg_get_serial_sequence('payment', 'id'),max(200000));
 commit;
+\dt
