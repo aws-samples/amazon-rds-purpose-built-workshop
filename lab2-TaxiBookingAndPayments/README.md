@@ -53,7 +53,7 @@ sam --version
 cd ~/environment
 curl -O https://bootstrap.pypa.io/get-pip.py # Get the install script. 
 sudo python3 get-pip.py # Install pip.
-pip3 install boto3
+pip3 install boto3 --user
  ```
 
 ###
