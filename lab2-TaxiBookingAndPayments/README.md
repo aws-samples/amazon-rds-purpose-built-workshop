@@ -291,9 +291,8 @@ select * from billing where billing_cycle=2;
 5. Execute the query below to insert driver payment information for all the drivers, for the current billing cycle from based on the billing information in the billing table
 
 ```sql
-insert into payment(billing_id,driver_id,billing_cycle,payment_amount,payment_date, payment_id, payment_status,description)
-select id, driver_id, billing_cycle,sum(billing_amount*commissions),billing_date, 7, 'completed','Payment cycle Sep 2019' 
-from billing where billing_cycle = 2 and billing_status = 'completed' group by id, driver_id, billing_cycle, billing_date;
+insert into payment(billing_id,driver_id,billing_cycle,payment_amount,payment_date, payment_id, payment_status,description) select a.id, a.driver_id, a.billing_cycle,sum(a.billing_amount*a.commissions),a.billing_date, b.payment_id, 'completed','Payment cycle Sep 2019' 
+from billing a, drivers b where a.driver_id=b.driver_id and a.billing_cycle = 2 and a.billing_status = 'completed' group by a.id, a.driver_id,b.payment_id, a.billing_cycle, a.billing_date;
 ```
 
 > The query should insert at-least 1 row into the payment table and the output should be similar to the output below.
