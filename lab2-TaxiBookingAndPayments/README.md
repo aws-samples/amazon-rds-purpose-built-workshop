@@ -1,7 +1,6 @@
 # LAB 2: Taxi Booking And Payments
 
 * [Overview](#overview)  
-* [Lab Overview](#lab-overview)
 * [Setup AWS Cloud 9 Environment](#aetup-aws-cloud9-environment)  
     * [Install JQ](#install-jq)
     * [Update SAM CLI](#update-sam-cli)
@@ -17,8 +16,6 @@
  
 ## Overview
 ![architecture.png](./assets/architecture.png)
-
-## Lab Overview
 
 ## Setup the AWS Cloud 9 Environment
 
