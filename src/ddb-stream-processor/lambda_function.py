@@ -52,7 +52,7 @@ def getTripCompletionRecords(ddbRecords):
                     "payment_type": "" if 'PAYMENT_TYPET' not in newInfo else newInfo['PAYMENT_TYPET']['N'],
                     "driver_id": "" if 'DRIVER_ID' not in newInfo else newInfo['DRIVER_ID']['S'],
                     "driver_email": "" if 'DRIVER_EMAIL' not in newInfo else newInfo['DRIVER_EMAIL']['S'],
-                    "tripInfo": "" if 'tripinfo' not in newInfo else newInfo['tripinfo']['S'],
+                    "trip_Info": "" if 'tripinfo' not in newInfo else newInfo['tripinfo']['S'],
                     "riderId": "" if 'RIDER_ID' not in newInfo else newInfo['RIDER_ID']['N'],
                     "extra": "" if 'EXTRA' not in newInfo else newInfo['EXTRA']['S'],
                     "fare_amount": "" if 'FARE_AMOUNT' not in newInfo else newInfo['FARE_AMOUNT']['S'],
@@ -85,7 +85,7 @@ def createInsertSQLQueries(completedTripList):
             
     for tripInfo in completedTripList:
         queryString = queryStringBase + " VALUES(" 
-        queryString += tripInfo['riderId'] + "," + tripInfo['driver_id'] + ",'" + tripInfo['rider_name'] + "','" + tripInfo['rider_mobile'] + "','" + tripInfo['rider_email'] + "','" + tripInfo['trip_info'] + "','"
+        queryString += tripInfo['riderId'] + "," + tripInfo['driver_id'] + ",'" + tripInfo['rider_name'] + "','" + tripInfo['rider_mobile'] + "','" + tripInfo['rider_email'] + "','" + tripInfo['trip_Info'] + "','"
         queryString += tripInfo['driver_name'] + "','" + tripInfo['driver_email'] + "','" + tripInfo['driver_mobile'] + "','" + tripInfo['vehicle_id'] + "'," + tripInfo['cab_type_id'] + ","
         queryString += tripInfo['vendor_id'] + ",'" + tripInfo['pickup_datetime'] + "','" + tripInfo['dropoff_datetime'] + "','" + tripInfo['store_and_fwd_flag'] + "'," + tripInfo['rate_code_id'] + ","
         queryString += tripInfo['pickup_longitude'] + "," + tripInfo['pickup_latitude'] + "," + tripInfo['dropoff_longitude'] + "," + tripInfo['dropoff_latitude'] + "," + tripInfo['passenger_count'] + ","
