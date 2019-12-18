@@ -245,16 +245,15 @@ select * from trips;
 
 > The output of the query should have at-least 1 row in the trips table, similar to the output below.
 >```
->   id    | rider_id | driver_id | rider_name  | rider_mobile |       rider_email       | driver_name  |     driver_email      | driver_mobile | vehicle_id | cab_type_id | vendor_id |   pickup
-> _datetime   |  dropoff_datetime   | store_and_fwd_flag | rate_code_id | pickup_longitude | pickup_latitude | dropoff_longitude | dropoff_latitude | passenger_count | trip_distance | fare_amou
-> nt | extra | mta_tax | tip_amount | tolls_amount | ehail_fee | improvement_surcharge | total_amount | payment_type | trip_type | pickup_location_id | dropoff_location_id |  status   
-> ---------+----------+-----------+-------------+--------------+-------------------------+--------------+-----------------------+---------------+------------+-------------+-----------+---------
-> ------------+---------------------+--------------------+--------------+------------------+-----------------+-------------------+------------------+-----------------+---------------+----------
-> ---+-------+---------+------------+--------------+-----------+-----------------------+--------------+--------------+-----------+--------------------+---------------------+-----------
->  2000001 |    69257 |    510909 | person69257 | +11609467790 | person69257@example.com | driver510909 | driver510909@taxi.com | +11261783124  | UDT200764  |           2 |         2 | 2019-09-
-> 15 20:41:30 | 2019-09-15 20:52:25 | N                  |            6 |       -73.881374 |        40.79103 |        -73.070448 |        40.467936 |               6 |            50 |      112.
-> 24 |   0.1 |     0.1 |       7.72 |         4.57 |         0 |                   0.6 |        42.26 |            6 |         2 |                  0 |                   0 | Completed
-> (1 row)
+> id    | rider_id | driver_id | rider_name  | rider_mobile |       rider_email       |              trip_info              | driver_name  |     driver_email      | driver_mobile | vehicle_id | cab_type_id | vendor_id |   pickup_datetime   |  dropoff_datetime   | store_and_fwd_flag | rate_code_id | pickup_longitude | pickup_latitude | dropoff_longitude | dropoff_latitude | pa
+> ssenger_count | trip_distance | fare_amount | extra | mta_tax | tip_amount | tolls_amount | ehail_fee | improvement_surcharge | total_amount | payment_type | trip_type | pickup_location_id | dropoff_location_id |  status   
+> ---------+----------+-----------+-------------+--------------+-------------------------+-------------------------------------+--------------+-----------------------+---------------+------------+-------------+-----------+---------------------+---------------------+--------------------+--------------+------------------+-----------------+-------------------+------------------+---
+> --------------+---------------+-------------+-------+---------+------------+--------------+-----------+-----------------------+--------------+--------------+-----------+--------------------+---------------------+-----------
+> 2000001 |    69257 |    528204 | person69257 | +11609467790 | person69257@example.com | 2019-12-18T05:15:33.640038Z,3219350 | driver528204 | driver528204@taxi.com | +11185992795  | PXX248130  |           2 |         2 | 2019-12-18 05:15:33 | 2019-12-18 05:19:10 | N                  |            4 |       -73.496113 |       40.664146 |        -73.527485 |        40.665024 |   
+>            3 |            32 |      142.96 |   0.3 |     0.4 |       4.92 |          4.4 |         0 |                   0.3 |        14.18 |            3 |         2 |                  0 |                   0 | Completed
+> 2000002 |    69257 |    507977 | person69257 | +11609467790 | person69257@example.com | 2019-12-18T05:31:13.478619Z,1747531 | driver507977 | driver507977@taxi.com | +11088418780  | XVJ356159  |           2 |         2 | 2019-12-18 05:31:13 | 2019-12-18 05:31:57 | N                  |            3 |       -73.401165 |       40.866392 |        -73.065379 |         40.96106 |   
+>            4 |             8 |       55.39 |   1.0 |     0.4 |       8.57 |         2.25 |         0 |                   0.8 |       127.75 |            3 |         2 |                  0 |                   0 | Completed
+> (2 rows)
 >```
 
 3. Execute the query below to insert driver billing information for all the drivers, for the current daily billing cycle based on the trip information in the trips table.
@@ -288,7 +287,7 @@ select * from billing where billing_cycle=2;
 5. Execute the query below to insert driver payment information for all the drivers, for the current billing cycle from based on the billing information in the billing table
 
 ```sql
-insert into payment(billing_id,driver_id,billing_cycle,payment_amount,payment_date, payment_id, payment_status,description) select a.id, a.driver_id, a.billing_cycle,sum(a.billing_amount*a.commissions),a.billing_date, b.payment_id, 'completed','Payment cycle Sep 2019' 
+insert into payment(billing_id,driver_id,billing_cycle,payment_amount,payment_date, payment_id, payment_status,description) select a.id, a.driver_id, a.billing_cycle,sum(a.billing_amount*a.commissions),a.billing_date, b.payment_id, 'completed','Payment cycle Jan 2020' 
 from billing a, drivers b where a.driver_id=b.driver_id and a.billing_cycle = 2 and a.billing_status = 'completed' group by a.id, a.driver_id,b.payment_id, a.billing_cycle, a.billing_date;
 ```
 
@@ -300,14 +299,14 @@ from billing a, drivers b where a.driver_id=b.driver_id and a.billing_cycle = 2 
 6. Execute the query below to review the payment information that you just inserted
 
 ```sql
-select * from payment where description='Payment cycle Sep 2019';
+select * from payment where description='Payment cycle Jan 2020';
 ```
 
 > The output of the query should retrieve at-least 1 row from the payment table, similar to the output below.
 >```
 >     id   | billing_id | driver_id | billing_cycle | payment_amount |        payment_date        | payment_id | payment_status |      description       
 >  --------+------------+-----------+---------------+----------------+----------------------------+------------+----------------+------------------------
->   200001 |     200001 |    510909 |             2 |         33.808 | 2019-09-16 01:59:05.634323 |          7 | completed      | Payment cycle Sep 2019
+>   200001 |     200001 |    510909 |             2 |         33.808 | 2019-09-16 01:59:05.634323 |          7 | completed      | Payment cycle Jan 2020
 >  (1 row)
 >```
 
