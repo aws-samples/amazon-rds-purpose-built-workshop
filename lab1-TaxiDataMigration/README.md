@@ -282,7 +282,7 @@ AWS DMS uses table-mapping rules to map data from the source to the target Dynam
           "target-attribute-name": "tripinfo",  
           "attribute-type": "scalar",  
           "attribute-sub-type": "string",  
-          "value": "${ID},${PICKUP_DATETIME}"  
+          "value": "${PICKUP_DATETIME},${ID}"  
       },  
       {  
           "target-attribute-name": "driverid",  
