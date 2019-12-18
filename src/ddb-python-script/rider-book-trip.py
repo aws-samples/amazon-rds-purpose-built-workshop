@@ -18,7 +18,7 @@ print("Rider Mobile = " + rider_mobile)
 
 pickUpDateTime = datetime.datetime.utcnow().isoformat() + 'Z'
 id =  ''.join(["%s" % randint(0, 9) for num in range(0, 7)])
-tripinfo = id +"," + pickUpDateTime
+tripinfo = pickUpDateTime +"," + id 
 print("Trip Info= " + tripinfo)
 
 status = "Booked"

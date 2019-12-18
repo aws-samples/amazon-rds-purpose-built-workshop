@@ -76,7 +76,7 @@ def createInsertSQLQueries(completedTripList):
     insertSQLQuries = []
     
     queryStringBase = """INSERT INTO public.trips (
-            rider_id, driver_id, rider_name, rider_mobile, rider_email, driver_name,
+            rider_id, driver_id, rider_name, rider_mobile, rider_email, trip_info, driver_name,
             driver_email, driver_mobile, vehicle_id, cab_type_id, vendor_id, pickup_datetime,
             dropoff_datetime, store_and_fwd_flag, rate_code_id, pickup_longitude, pickup_latitude,
             dropoff_longitude, dropoff_latitude, passenger_count, trip_distance, fare_amount, extra,
@@ -85,7 +85,7 @@ def createInsertSQLQueries(completedTripList):
             
     for tripInfo in completedTripList:
         queryString = queryStringBase + " VALUES(" 
-        queryString += tripInfo['riderId'] + "," + tripInfo['driver_id'] + ",'" + tripInfo['rider_name'] + "','" + tripInfo['rider_mobile'] + "','" + tripInfo['rider_email'] + "','"
+        queryString += tripInfo['riderId'] + "," + tripInfo['driver_id'] + ",'" + tripInfo['rider_name'] + "','" + tripInfo['rider_mobile'] + "','" + tripInfo['rider_email'] + "','" + tripInfo['trip_info'] + "','"
         queryString += tripInfo['driver_name'] + "','" + tripInfo['driver_email'] + "','" + tripInfo['driver_mobile'] + "','" + tripInfo['vehicle_id'] + "'," + tripInfo['cab_type_id'] + ","
         queryString += tripInfo['vendor_id'] + ",'" + tripInfo['pickup_datetime'] + "','" + tripInfo['dropoff_datetime'] + "','" + tripInfo['store_and_fwd_flag'] + "'," + tripInfo['rate_code_id'] + ","
         queryString += tripInfo['pickup_longitude'] + "," + tripInfo['pickup_latitude'] + "," + tripInfo['dropoff_longitude'] + "," + tripInfo['dropoff_latitude'] + "," + tripInfo['passenger_count'] + ","
