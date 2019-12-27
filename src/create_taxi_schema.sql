@@ -45,6 +45,7 @@ insert into rate_codes values (5,'Negotiated fare');
 insert into rate_codes values (6,'Group ride');
 insert into rate_codes values (99,'Peak rate');
 
+
 CREATE TABLE drivers(
    driver_id bigint PRIMARY KEY,
    driver_name VARCHAR (100)  NOT NULL,
@@ -53,7 +54,7 @@ CREATE TABLE drivers(
    driver_email VARCHAR (100) UNIQUE NOT NULL,
    created_on TIMESTAMP NOT NULL,
    driver_mobile varchar(100) NOT NULL,
-   payment_id bigint not null references payment_types(payment_id),  
+   payment_id bigint not null references payment_types(payment_id),
    address varchar(1000),
    rating varchar(10),
    profile varchar(1000)
@@ -65,22 +66,21 @@ CREATE TABLE riders(
    rider_email VARCHAR (100) UNIQUE NOT NULL,
    created_on TIMESTAMP NOT NULL,
    payment_id bigint  not null references payment_types(payment_id),
-   rider_mobile varchar(100) NOT NULL,  
+   rider_mobile varchar(100) NOT NULL,
    address varchar(1000),
    rating varchar(10),
    profile varchar(1000)
 );
 
-
 CREATE TABLE billing(
    id serial primary key,
    driver_id bigint references drivers(driver_id),
-   billing_cycle numeric default 1,
+   billing_cycle double precision default 1,
    billing_start timestamp without time zone,
    billing_end timestamp without time zone,
    billing_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-   billing_amount numeric,
-   commissions numeric default 0.2,
+   billing_amount numeric(10,6),
+   commissions numeric(10,6) default 0.2,
    description varchar(500),
    rides_total bigint,
    billing_status varchar(100)
@@ -92,15 +92,15 @@ CREATE TABLE payment(
    id serial primary key,
    billing_id bigint references billing(id),
    driver_id bigint references drivers(driver_id),
-   billing_cycle numeric default 1,
-   payment_amount numeric,
+   billing_cycle double precision default 1,
+   payment_amount numeric(10,6),
    payment_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
    payment_id bigint default 7 references payment_types(payment_id),
    payment_status varchar(100),
    description varchar(500)
 );
 
-  
+
 
 create table trips(
   id serial primary key,
@@ -108,7 +108,8 @@ create table trips(
   driver_id bigint references drivers(driver_id),
   rider_name varchar(100),
   rider_mobile varchar(100),
-  rider_email varchar(100),
+  rider_email varchar(100) not null,
+  trip_info varchar(100) not null,
   driver_name varchar(100),
   driver_email varchar(100),
   driver_mobile varchar(100),
@@ -119,30 +120,30 @@ create table trips(
   dropoff_datetime timestamp without time zone,
   store_and_fwd_flag varchar(100),
   rate_code_id bigint references rate_codes(rate_id),
-  pickup_longitude numeric,
-  pickup_latitude numeric,
-  dropoff_longitude numeric,
-  dropoff_latitude numeric,
-  passenger_count integer,
-  trip_distance numeric,
-  fare_amount numeric,
-  extra numeric,
-  mta_tax numeric,
-  tip_amount numeric,
-  tolls_amount numeric,
-  ehail_fee numeric,
-  improvement_surcharge numeric,
-  total_amount numeric,
+  pickup_longitude DOUBLE PRECISION,
+  pickup_latitude DOUBLE PRECISION,
+  dropoff_longitude DOUBLE PRECISION,
+  dropoff_latitude DOUBLE PRECISION,
+  passenger_count DOUBLE PRECISION,
+  trip_distance DOUBLE PRECISION,
+  fare_amount DOUBLE PRECISION,
+  extra DOUBLE PRECISION,
+  mta_tax DOUBLE PRECISION,
+  tip_amount DOUBLE PRECISION,
+  tolls_amount DOUBLE PRECISION,
+  ehail_fee DOUBLE PRECISION,
+  improvement_surcharge DOUBLE PRECISION,
+  total_amount DOUBLE PRECISION,
   payment_type bigint references payment_types (payment_id),
   trip_type integer,
   pickup_location_id integer,
   dropoff_location_id integer,
-  status varchar(100) references trip_status(status)
+  status varchar(100) references trip_status(status),
+unique (rider_email,trip_info)
 );
-
-
  SELECT pg_catalog.setval(pg_get_serial_sequence('trips', 'id'),max(2000000));
  SELECT pg_catalog.setval(pg_get_serial_sequence('billing', 'id'),max(200000));
  SELECT pg_catalog.setval(pg_get_serial_sequence('payment', 'id'),max(200000));
 commit;
 \dt
+       
