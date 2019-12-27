@@ -132,7 +132,7 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":tamt" : decimal.Decimal(newInfo['TOTAL_AMOUNT'])})
     if 'MTA_TAX' in newInfo:
         updateExp += "MTA_TAX = :mtax, "
-        newItem.update({":mtax" : newInfo['MTA_TAX']})
+        newItem.update({":mtax" : decimal.Decimal(newInfo['MTA_TAX'])})
     if 'DROPOFF_LONGITUDE' in newInfo:
         updateExp += "DROPOFF_LONGITUDE = :dropLong, "
         newItem.update({":dropLong" : decimal.Decimal(newInfo['DROPOFF_LONGITUDE'])})
@@ -145,6 +145,8 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
     if 'DRIVER_EMAIL' in newInfo:
         updateExp += "DRIVER_EMAIL = :de, "
         newItem.update({":de" : newInfo['DRIVER_EMAIL']})
+        updateExp += "driverid = :drid, "
+        newItem.update({":drid" : newInfo['DRIVER_EMAIL']})
     if 'EXTRA' in newInfo:
         updateExp += "EXTRA = :ext, "
         newItem.update({":ext" : decimal.Decimal(newInfo['EXTRA'])})
@@ -162,10 +164,10 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":dm" : newInfo['DRIVER_MOBILE']})
     if 'tripinfo' in newInfo:
         updateExp += "ID = :id, "
-        newItem.update({":id" : newInfo['tripinfo'].split(',')[1]})
+        newItem.update({":id" : int(newInfo['tripinfo'].split(',')[1])})
     if 'DriverDetails' in newInfo:
         updateExp += "DriverDetails = :ddet, "
-        newItem.update({":ddet" : newInfo['DriverDetails']})
+        newItem.update({":ddet" : json.dumps(newInfo['DriverDetails'], indent=2, cls=DecimalEncoder)})
     
     # Remove last 2 charectors , and space from the update expression
     updateExp = updateExp[:-2]
