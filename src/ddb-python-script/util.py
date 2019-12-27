@@ -141,7 +141,7 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":pmtt" : newInfo['PAYMENT_TYPET']})
     if 'DRIVER_ID' in newInfo:
         updateExp += "DRIVER_ID = :did, "
-        newItem.update({":did" : newInfo['DRIVER_ID']})
+        newItem.update({":did" : int(newInfo['DRIVER_ID'])})
     if 'DRIVER_EMAIL' in newInfo:
         updateExp += "DRIVER_EMAIL = :de, "
         newItem.update({":de" : newInfo['DRIVER_EMAIL']})
