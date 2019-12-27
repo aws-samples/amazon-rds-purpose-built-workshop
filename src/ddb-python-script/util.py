@@ -1,5 +1,5 @@
 import boto3
-import decimal
+import decimal 
 import json
 from botocore.exceptions import ClientError
 
@@ -87,7 +87,7 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":vid" : newInfo['VENDOR_ID']})
     if 'PICKUP_LONGITUDE' in newInfo:
         updateExp += "PICKUP_LONGITUDE = :pickLong, "
-        newItem.update({":pickLong" : newInfo['PICKUP_LONGITUDE']})
+        newItem.update({":pickLong" : decimal.Decimal(newInfo['PICKUP_LONGITUDE'])})
     if 'TRIP_TYPE' in newInfo:
         updateExp += "TRIP_TYPE = :tt, "
         newItem.update({":tt" : newInfo['TRIP_TYPE']})
@@ -96,19 +96,19 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":saf" : newInfo['STORE_AND_FWD_FLAG']})
     if 'DROPOFF_LATITUDE' in newInfo:
         updateExp += "DROPOFF_LATITUDE = :dropLat, "
-        newItem.update({":dropLat" : newInfo['DROPOFF_LATITUDE']})
+        newItem.update({":dropLat" : decimal.Decimal(newInfo['DROPOFF_LATITUDE'])})
     if 'RATE_CODE_ID' in newInfo:
         updateExp += "RATE_CODE_ID = :rcid, "
         newItem.update({":rcid" : newInfo['RATE_CODE_ID']})
     if 'TOLLS_AMOUNT' in newInfo:
         updateExp += "TOLLS_AMOUNT = :tllamt, "
-        newItem.update({":tllamt" : newInfo['TOLLS_AMOUNT']})
+        newItem.update({":tllamt" : decimal.Decimal(newInfo['TOLLS_AMOUNT'])})
     if 'IMPROVEMENT_SURCHARGE' in newInfo:
         updateExp += "IMPROVEMENT_SURCHARGE = :isc, "
-        newItem.update({":isc" : newInfo['IMPROVEMENT_SURCHARGE']})
+        newItem.update({":isc" : decimal.Decimal(newInfo['IMPROVEMENT_SURCHARGE'])})
     if 'TIP_AMOUNT' in newInfo:
         updateExp += "TIP_AMOUNT = :tpamt, "
-        newItem.update({":tpamt" : newInfo['TIP_AMOUNT']})
+        newItem.update({":tpamt" : decimal.Decimal(newInfo['TIP_AMOUNT'])})
     if 'DROPOFF_DATETIME' in newInfo:
         updateExp += "DROPOFF_DATETIME = :drpdt, "
         newItem.update({":drpdt" : newInfo['DROPOFF_DATETIME']})
@@ -120,22 +120,22 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":dn" : newInfo['DRIVER_NAME']})
     if 'PICKUP_LATITUDE' in newInfo:
         updateExp += "PICKUP_LATITUDE = :pickLat, "
-        newItem.update({":pickLat" : newInfo['PICKUP_LATITUDE']})
+        newItem.update({":pickLat" : decimal.Decimal(newInfo['PICKUP_LATITUDE'])})
     if 'TRIP_DISTANCE' in newInfo:
         updateExp += "TRIP_DISTANCE = :trpDist, "
-        newItem.update({":trpDist" : newInfo['TRIP_DISTANCE']})
+        newItem.update({":trpDist" : decimal.Decimal(newInfo['TRIP_DISTANCE'])})
     if 'VEHICLE_ID' in newInfo:
         updateExp += "VEHICLE_ID = :vhid, "
         newItem.update({":vhid" : newInfo['VEHICLE_ID']})
     if 'TOTAL_AMOUNT' in newInfo:
         updateExp += "TOTAL_AMOUNT = :tamt, "
-        newItem.update({":tamt" : newInfo['TOTAL_AMOUNT']})
+        newItem.update({":tamt" : decimal.Decimal(newInfo['TOTAL_AMOUNT'])})
     if 'MTA_TAX' in newInfo:
         updateExp += "MTA_TAX = :mtax, "
         newItem.update({":mtax" : newInfo['MTA_TAX']})
     if 'DROPOFF_LONGITUDE' in newInfo:
         updateExp += "DROPOFF_LONGITUDE = :dropLong, "
-        newItem.update({":dropLong" : newInfo['DROPOFF_LONGITUDE']})
+        newItem.update({":dropLong" : decimal.Decimal(newInfo['DROPOFF_LONGITUDE'])})
     if 'PAYMENT_TYPET' in newInfo:
         updateExp += "PAYMENT_TYPET = :pmtt, "
         newItem.update({":pmtt" : newInfo['PAYMENT_TYPET']})
@@ -147,10 +147,10 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":de" : newInfo['DRIVER_EMAIL']})
     if 'EXTRA' in newInfo:
         updateExp += "EXTRA = :ext, "
-        newItem.update({":ext" : newInfo['EXTRA']})
+        newItem.update({":ext" : decimal.Decimal(newInfo['EXTRA'])})
     if 'FARE_AMOUNT' in newInfo:
         updateExp += "FARE_AMOUNT = :famt, "
-        newItem.update({":famt" : newInfo['FARE_AMOUNT']})
+        newItem.update({":famt" : decimal.Decimal(newInfo['FARE_AMOUNT'])})
     if 'PASSENGER_COUNT' in newInfo:
         updateExp += "PASSENGER_COUNT = :psgCnt, "
         newItem.update({":psgCnt" : newInfo['PASSENGER_COUNT']})
@@ -162,7 +162,7 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
         newItem.update({":dm" : newInfo['DRIVER_MOBILE']})
     if 'tripinfo' in newInfo:
         updateExp += "ID = :id, "
-        newItem.update({":id" : newInfo['tripinfo'].split(',')[0]})
+        newItem.update({":id" : newInfo['tripinfo'].split(',')[1]})
     if 'DriverDetails' in newInfo:
         updateExp += "DriverDetails = :ddet, "
         newItem.update({":ddet" : newInfo['DriverDetails']})
@@ -173,7 +173,7 @@ def updateTripInfo(newInfo, expectedTripStatus = None):
     print("Key= " + json.dumps(key, indent=2))  
     print("UpdateExpression= " + updateExp)
     print ("ConditionExpression = " + conditionalExp)
-    print ("ExpressionAttributeValues= " + json.dumps(newItem, indent=2))
+    print ("ExpressionAttributeValues= " + json.dumps(newItem, indent=2, cls=DecimalEncoder))
     
     try:
         response = table.update_item(
