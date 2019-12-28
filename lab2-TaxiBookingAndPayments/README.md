@@ -206,7 +206,7 @@ python3 rider-book-trip.py
 
 > From the output of the script make a note of the tripinfo value. You will be entering this value when prompted by the subsequent scripts. It a randomly generated string that uniquely identifies a trip. It will similar to 
 >```
-> 0724662,2019-09-15T20:41:30.455031Z
+> 2019-09-15T20:41:30.455031Z,0724662
 >``` 
 
 2. Copy and paste the following command as a driver to accept a trip. The script will prompt for the 'tripinfo' value. Enter the value (without double quotes) from the output of the previous python script you just ran as a rider to book a new trip.
