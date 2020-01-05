@@ -22,7 +22,7 @@ tripCompletedInfo = {
     "TOLLS_AMOUNT" : str(round(random.uniform(0,5),2)),
     "IMPROVEMENT_SURCHARGE" : str(round(random.uniform(0,1),1)),
     "TIP_AMOUNT" : str(round(random.uniform(0,10),2)),
-    "DROPOFF_DATETIME" : datetime.datetime.utcnow().isoformat() + 'Z',
+    "DROPOFF_DATETIME" : datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
     "TRIP_DISTANCE" : randint(1, 50),
     "TOTAL_AMOUNT" : str(round(random.uniform(5,150),2)),
     "MTA_TAX" : str(round(random.uniform(0,1),1)),
