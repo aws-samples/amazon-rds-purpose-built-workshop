@@ -29,7 +29,7 @@ def getTripCompletionRecords(ddbRecords):
                 
                 completedtripInfo = {
                     "rider_mobile": "" if 'RIDER_MOBILE' not in newInfo else newInfo['RIDER_MOBILE']['S'],
-                    "pickup_datetime": "" if 'PICKUP_DATETIME' not in newInfo else datetime.strptime(newInfo['PICKUP_DATETIME']['S'], "%Y-%m-%dT%H:%M:%S.%f%z").strftime('%Y-%m-%d %H:%M:%S'),
+                    "pickup_datetime": "" if 'PICKUP_DATETIME' not in newInfo else datetime.strptime(newInfo['PICKUP_DATETIME']['S'], "%Y-%m-%dT%H:%M:%S%z").strftime('%Y-%m-%d %H:%M:%S'),
                     "rider_name": "" if 'RIDER_NAME' not in newInfo else newInfo['RIDER_NAME']['S'],
                     "vendor_id": "" if 'VENDOR_ID' not in newInfo else newInfo['VENDOR_ID']['N'],
                     "pickup_longitude": "" if 'PICKUP_LONGITUDE' not in newInfo else newInfo['PICKUP_LONGITUDE']['N'],
@@ -40,7 +40,7 @@ def getTripCompletionRecords(ddbRecords):
                     "tolls_amount": "" if 'TOLLS_AMOUNT' not in newInfo else newInfo['TOLLS_AMOUNT']['N'],
                     "improvement_surcharge": "" if 'IMPROVEMENT_SURCHARGE' not in newInfo else newInfo['IMPROVEMENT_SURCHARGE']['N'],
                     "tip_amount": "" if 'TIP_AMOUNT' not in newInfo else newInfo['TIP_AMOUNT']['N'],
-                    "dropoff_datetime": "" if 'DROPOFF_DATETIME' not in newInfo else datetime.strptime(newInfo['DROPOFF_DATETIME']['S'], "%Y-%m-%dT%H:%M:%S.%f%z").strftime('%Y-%m-%d %H:%M:%S'),
+                    "dropoff_datetime": "" if 'DROPOFF_DATETIME' not in newInfo else datetime.strptime(newInfo['DROPOFF_DATETIME']['S'], "%Y-%m-%dT%H:%M:%S%z").strftime('%Y-%m-%d %H:%M:%S'),
                     "cab_type_id": "" if 'CAB_TYPE_ID' not in newInfo else newInfo['CAB_TYPE_ID']['N'],
                     "driver_name": "" if 'DRIVER_NAME' not in newInfo else newInfo['DRIVER_NAME']['S'],
                     "pickup_latitude": "" if 'PICKUP_LATITUDE' not in newInfo else newInfo['PICKUP_LATITUDE']['N'],
