@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "This CloudFormation sample template Oracle_DynamoDB_Aurora_PostgreSQL_DMS lab creates a Oracle and Aurora Postgres RDS instances in a VPC which can be used to test the database migration using AWS DMS service. You will be billed for the AWS resources used if you create a stack from this template",
+  "Description" : "This CloudFormation sample template Oracle_DynamoDB_Aurora_PostgreSQL_DMS creates an Oracle and Aurora PostgreSQL RDS instances in a VPC which can be used to test the database migration using AWS DMS service. It also creates a DynamoDB table and a Cloud9 environment. You will be billed for the AWS resources used if you create a stack from this template",
 
   "Parameters" : {
 
@@ -547,8 +547,8 @@
                 },
                 "SubnetId": {
                     "Ref": "DBSubnet1"
-                }
-				
+                },
+               "OwnerArn": { "Fn::Sub" : "arn:aws:sts::${AWS::AccountId}:assumed-role/TeamRole/MasterKey" }	
             }
         },
     "myDynamoDBTable" : {
@@ -626,11 +626,11 @@
         },
 	
 	
-	"DMSIAMRole": {
+	"DMSIAMRole1": {
         "Type": "AWS::IAM::Role",
         "Condition" : "NotExistsDMSVPCRole",
         "Properties": {
-           "ManagedPolicyArns": [ "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole" ],
+           "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"],
            "Path": "/",
            "RoleName": "dms-vpc-role",
            "AssumeRolePolicyDocument" : {
@@ -643,6 +643,24 @@
           }
         }
      },
+     
+	"DMSIAMRole2": {
+        "Type": "AWS::IAM::Role",
+        "Condition" : "NotExistsDMSVPCRole",
+        "Properties": {
+           "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole"],
+           "Path": "/",
+           "RoleName": "dms-cloudwatch-logs-role",
+           "AssumeRolePolicyDocument" : {
+            "Version" : "2012-10-17",
+            "Statement" : [{
+              "Effect" : "Allow",
+              "Principal" : { "Service" : "dms.amazonaws.com" },
+              "Action" : "sts:AssumeRole"
+            }]
+          }
+        }
+     },     
 	
 	
     "DMSMigratetoDDBRole" : {
@@ -664,7 +682,7 @@
       "Properties": {
        "AllocatedStorage": 100,
        "PubliclyAccessible": "false",
-	   "EngineVersion": "3.3.0",
+	   "EngineVersion": "3.3.1",
        "ReplicationInstanceClass": { "Ref" : "DMSInstanceType" },
        "ReplicationSubnetGroupIdentifier": { "Ref" : "MyDMSReplicationSubnetGroup" },
        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} } ]
