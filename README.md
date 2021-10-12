@@ -2,8 +2,6 @@
 
 A tutorial for developers, DBAs and data engineers to get hands-on experience on how to migrate relational data to AWS purpose-built databases such as Amazon DynamoDB and Amazon Aurora using AWS DMS and build data processing applications on top of it.
 
-
-
 # Overview: Working with AWS Purpose-Built databases
 
 The days of one-size-fits-all, monolithic databases are behind us. Database design and management requires a different mindset in AWS compared to traditional relational database management system (RDBMS) design. In this workshop, we will demonstrate how to leverage both relational (Amazon Aurora) and non-relational databases (Amazon DynamoDB) that are purpose-built to handle the specific needs of an application. For illustrative purpose, we will leverage a relational schema used by a taxi application.
