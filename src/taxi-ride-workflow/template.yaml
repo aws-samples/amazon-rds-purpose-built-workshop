@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Sam application to deploy lambda.
+Parameters: 
+    TripBookingFnName:
+        Type: String
+        Default: rider-book-trip
+        Description: Name of the Lambda function for Taxi Trip Booking by Rider
+    TripAcceptFnName:
+        Type: String
+        Default: driver-accept-trip
+        Description: Name of the Lambda function for Taxi Trip Acceptance by Driver
+    TripCompleteFnName:
+        Type: String
+        Default: driver-complete-trip
+        Description: Name of the Lambda function for Taxi Trip Completion by Driver
+    LambdaLayerNameParameter:
+        Type: String
+        Default: util
+        Description: Name of the Lambda Layer containing Python utility functions
+    DDBTableName:
+        Type: String
+        Description: Name of the Amazon Dynamodb table. Default name is 'aws-db-workshop-trips'
+        Default: aws-db-workshop-trips
+    SecurityGroupIds: 
+        Type: List<AWS::EC2::SecurityGroup::Id>
+        Description: Security Group IDs that Lambda will use
+    VpcSubnetIds: 
+        Type: List<AWS::EC2::Subnet::Id>
+        Description: VPC Subnet IDs that Lambda will use (min 2 for HA)
+Resources:
+    PythonUtilFnsLayer:
+        Type: AWS::Serverless::LayerVersion
+        Properties:
+            LayerName: !Ref LambdaLayerNameParameter
+            Description: Python utility functions for Taxi trip workflow
+            ContentUri: dependencies/util.zip
+            CompatibleRuntimes: 
+                - python3.7
+            LicenseInfo: 'MIT-0'
+            RetentionPolicy: Delete
+    RiderBookTripFunction:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            FunctionName: !Ref TripBookingFnName
+            Handler: lambda_function.lambda_handler
+            Runtime: python3.7
+            CodeUri: ./rider-book-trip
+            Description: Takes rider_id and rider_mobile as input and books a trip for the rider by updating ws-db-workshop-trips table in DynamoDB
+            MemorySize: 3008
+            Timeout: 900
+            Layers:
+                - !Ref PythonUtilFnsLayer
+            VpcConfig:
+                SecurityGroupIds: !Ref SecurityGroupIds
+                SubnetIds : !Ref VpcSubnetIds
+            Policies:
+                - VPCAccessPolicy: {}
+                - DynamoDBCrudPolicy: 
+                    TableName: !Ref DDBTableName
+            Tags:
+                Name: !Ref TripBookingFnName
+                Purpose: 'aws-db-workshop'
+    DriverAcceptTripFunction:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            FunctionName: !Ref TripAcceptFnName
+            Handler: lambda_function.lambda_handler
+            Runtime: python3.7
+            CodeUri: ./driver-accept-trip
+            Description: Takes rider_id and trip_info as input and accepts a trip by the driver by updating ws-db-workshop-trips table in DynamoDB
+            MemorySize: 3008
+            Timeout: 900
+            Layers:
+                - !Ref PythonUtilFnsLayer
+            VpcConfig:
+                SecurityGroupIds: !Ref SecurityGroupIds
+                SubnetIds : !Ref VpcSubnetIds
+            Policies:
+                - VPCAccessPolicy: {}
+                - DynamoDBCrudPolicy: 
+                    TableName: !Ref DDBTableName
+            Tags:
+                Name: !Ref TripAcceptFnName
+                Purpose: 'aws-db-workshop'
+    DriverCompleteTripFunction:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            FunctionName: !Ref TripCompleteFnName
+            Handler: lambda_function.lambda_handler
+            Runtime: python3.7
+            CodeUri: ./driver-complete-trip
+            Description: Takes rider_id and trip_info as input and completes a trip by the driver by updating ws-db-workshop-trips table in DynamoDB
+            MemorySize: 3008
+            Timeout: 900
+            Layers:
+                - !Ref PythonUtilFnsLayer
+            VpcConfig:
+                SecurityGroupIds: !Ref SecurityGroupIds
+                SubnetIds : !Ref VpcSubnetIds
+            Policies:
+                - VPCAccessPolicy: {}
+                - DynamoDBCrudPolicy: 
+                    TableName: !Ref DDBTableName
+            Tags:
+                Name: !Ref TripCompleteFnName
+                Purpose: 'aws-db-workshop'    

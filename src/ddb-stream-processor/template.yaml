@@ -27,11 +27,11 @@ Parameters:
         Description: Password of the Amazon Aurora database containing the trips table
     DDBTableName:
         Type: String
-        Description: Name of the Amazon Dynamodb table. Default name is 'aws-db-workshop-trips'
+        Description: Name of the Amazon DynamoDB table. Default name is 'aws-db-workshop-trips'
         Default: aws-db-workshop-trips
     DDBStreamName:
         Type: String
-        Description: Name of the Amazon Dynamodb stream
+        Description: Name of the Amazon DynamoDB stream
     SecurityGroupIds: 
         Type: List<AWS::EC2::SecurityGroup::Id>
         Description: Security Group IDs that Lambda will use
@@ -43,7 +43,7 @@ Resources:
         Type: AWS::Serverless::LayerVersion
         Properties:
             LayerName: !Ref LambdaLayerNameParameter
-            Description: Python Postgres Connection Library
+            Description: Python PostgreSQL Connection Library
             ContentUri: dependencies/pg8000-layer.zip
             CompatibleRuntimes: 
                 - python3.7
@@ -56,7 +56,7 @@ Resources:
             Handler: lambda_function.lambda_handler
             Runtime: python3.7
             CodeUri: .
-            Description: Process completed taxi trip informaiton from Amazon DynamoDB Streams and publishes the informaiton to the trips table in Amazon Aurora database
+            Description: Process completed taxi trip information from Amazon DynamoDB Streams and publishes the information to the trips table in Amazon Aurora database
             MemorySize: 3008
             Timeout: 900
             Layers:

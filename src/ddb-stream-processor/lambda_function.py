@@ -14,7 +14,7 @@ PGPASSWORD = os.environ['PG_PASSWORD']
 
 print ("DB Connection. DataBase= " + PGDATABASE + ", Host= " + PGHOST + ", PORT= " + str(PGPORT) + ", User= " + PGUSER)
 
-# This function filters out the records from the dynamodb stream that represent trip completion i.e. STATUS == Completed
+# This function filters out the records from the DynamoDB stream that represent trip completion i.e. STATUS == Completed
 def getTripCompletionRecords(ddbRecords):
     
     completedTripList = []
@@ -66,7 +66,7 @@ def getTripCompletionRecords(ddbRecords):
                 # "<>": "" if 'Vehicle Details' not in newInfo else newInfo['Vehicle Details']['S'],
                 # "<>": "" if 'ID' not in newInfo else newInfo['ID']['S'],
                 
-                print("Completed Trip Informaiton = " + json.dumps(completedtripInfo, indent = 2))
+                print("Completed Trip Information = " + json.dumps(completedtripInfo, indent = 2))
 
                 completedTripList.append(completedtripInfo)
 
@@ -131,9 +131,9 @@ def lambda_handler(event, context):
         insertSQLQueries = createInsertSQLQueries(completedTripInfoList)
         print("Create insert SQL commands ... Completed")
      
-        print("Publish completed trip informaiton ... InProgress")
+        print("Publish completed trip information ... InProgress")
         pusblishTripCompletionInfo(insertSQLQueries)
-        print("Publish completed trip informaiton ... Completed")
+        print("Publish completed trip information ... Completed")
     else:
         print("No Trip Completion Records found.")
     
