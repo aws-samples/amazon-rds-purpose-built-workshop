@@ -43,7 +43,7 @@ Resources:
         Type: 'AWS::Serverless::Function'
         Properties:
             FunctionName: !Ref TripBookingFnName
-            Handler: lambda_function.lambda_handler
+            Handler: rider-book-trip.lambda_handler
             Runtime: python3.7
             CodeUri: ./rider-book-trip
             Description: Takes rider_id and rider_mobile as input and books a trip for the rider by updating ws-db-workshop-trips table in DynamoDB
@@ -65,7 +65,7 @@ Resources:
         Type: 'AWS::Serverless::Function'
         Properties:
             FunctionName: !Ref TripAcceptFnName
-            Handler: lambda_function.lambda_handler
+            Handler: driver-accept-trip.lambda_handler
             Runtime: python3.7
             CodeUri: ./driver-accept-trip
             Description: Takes rider_id and trip_info as input and accepts a trip by the driver by updating ws-db-workshop-trips table in DynamoDB
@@ -87,7 +87,7 @@ Resources:
         Type: 'AWS::Serverless::Function'
         Properties:
             FunctionName: !Ref TripCompleteFnName
-            Handler: lambda_function.lambda_handler
+            Handler: driver-complete-trip.lambda_handler
             Runtime: python3.7
             CodeUri: ./driver-complete-trip
             Description: Takes rider_id and trip_info as input and completes a trip by the driver by updating ws-db-workshop-trips table in DynamoDB
