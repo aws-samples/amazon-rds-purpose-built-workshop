@@ -27,7 +27,7 @@ def lambda_handler(event, context):
     #trip_info = event["key1"]
     #trip_info = '2021-10-12T01:35:17Z,9150417'
     
-    i_rider_id= event['queryStringParameters']['rider_id']
+    i_rider_id= int(event['queryStringParameters']['rider_id'])
     trip_info = event['queryStringParameters']['trip_info']
     
     rider_name = "person" + str(i_rider_id)

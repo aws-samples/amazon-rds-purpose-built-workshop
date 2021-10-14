@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     #trip_info = input("Enter your tripinfo : ") 
     #trip_info = event["key1"]
     
-    i_rider_id= event['queryStringParameters']['rider_id']
+    i_rider_id= int(event['queryStringParameters']['rider_id'])
     trip_info = event['queryStringParameters']['trip_info']
     
     rider_name = "person" + str(i_rider_id)
