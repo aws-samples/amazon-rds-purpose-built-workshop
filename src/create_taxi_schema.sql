@@ -144,6 +144,77 @@ unique (rider_email,trip_info)
  SELECT pg_catalog.setval(pg_get_serial_sequence('trips', 'id'),max(2000000));
  SELECT pg_catalog.setval(pg_get_serial_sequence('billing', 'id'),max(200000));
  SELECT pg_catalog.setval(pg_get_serial_sequence('payment', 'id'),max(200000));
+ 
+create sequence billing_cycle_seq start with 2;
+
+CREATE or REPLACE PROCEDURE billingandpayments()
+LANGUAGE plpgsql
+as $$
+DECLARE
+        t RECORD;
+        l_sequence integer;
+        l_count integer;
+        l_rcount integer;
+BEGIN
+
+    select count(*) into l_count from trips where dropoff_datetime < current_date+1 and dropoff_datetime > current_date and status = 'Completed';
+
+    RAISE NOTICE 'Found % trip(s) record to be processed for billing', l_count;
+
+    if (l_count > 0) then
+
+        l_sequence := (SELECT nextval('billing_cycle_seq'));
+
+        RAISE NOTICE 'Running Billing Cycle # %', l_sequence;
+
+        insert into billing (driver_id, billing_cycle, billing_start, billing_end, billing_amount, commissions, rides_total, description, billing_status)
+        select driver_id, l_sequence, current_date, current_date+1, sum(total_amount), 0.8, count(*), 'billing cycle ' || l_sequence, 'Completed'
+        from trips
+        where dropoff_datetime < current_date+1 and dropoff_datetime > current_date and status = 'Completed'
+        group by driver_id;
+
+        GET DIAGNOSTICS l_rcount = ROW_COUNT;
+
+        RAISE NOTICE 'Inserted % record(s) into billing table', l_rcount;
+
+        insert into payment(billing_id,driver_id,billing_cycle,payment_amount,payment_date, payment_id, payment_status,description)
+        select a.id, a.driver_id, a.billing_cycle,sum(a.billing_amount*a.commissions),a.billing_date, b.payment_id, 'Completed','Payment Cycle ' || to_char(transaction_timestamp(),'FMMonth YYYY')
+        from billing a, drivers b
+        where a.driver_id=b.driver_id and a.billing_cycle = l_sequence and a.billing_status = 'Completed'
+        group by a.id, a.driver_id, a.billing_cycle, a.billing_date, b.payment_id;
+
+        GET DIAGNOSTICS l_rcount = ROW_COUNT;
+
+        RAISE NOTICE 'Inserted % record(s) into payment table', l_rcount;
+
+        update trips set status = 'Processed'
+        where dropoff_datetime < current_date+1 and dropoff_datetime > current_date and status = 'Completed';
+
+        GET DIAGNOSTICS l_rcount = ROW_COUNT;
+
+        RAISE NOTICE 'Updated % record(s) in trips table and marked status as Processed', l_rcount;
+
+        update billing set billing_status = 'Processed'
+        where billing_cycle = l_sequence and billing_status = 'Completed';
+
+        GET DIAGNOSTICS l_rcount = ROW_COUNT;
+
+        RAISE NOTICE 'Updated % record(s) in billing table and marked status as Processed', l_rcount;
+
+        RAISE NOTICE 'Billing Cycle # % Completed Successfully', l_sequence;
+
+    else
+
+            RAISE NOTICE 'No records found to be processed for billing. Exiting...';
+
+    end if;
+
+exception when others then
+  raise;
+
+END;
+$$;
+
 commit;
 \dt
        

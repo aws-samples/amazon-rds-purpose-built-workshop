@@ -15,4 +15,8 @@ drop table payment_types cascade;
 drop table car_model cascade;
 drop table cab_types cascade;
 
+drop sequence billing_cycle_seq;
+
+drop procedure billingandpayments();
+
 commit;
