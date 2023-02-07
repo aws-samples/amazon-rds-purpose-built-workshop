@@ -175,8 +175,8 @@
 
             "OracleEngineVersion" :
         {
-          "us-east-1"  : {"ver" : "19.0.0.0.ru-2020-04.rur-2020-04.r1"},
-          "us-west-2" : {"ver" : "19.0.0.0.ru-2020-04.rur-2020-04.r1"}
+          "us-east-1"  : {"ver" : "19.0.0.0.ru-2022-10.rur-2022-10.r1"},
+          "us-west-2" : {"ver" : "19.0.0.0.ru-2022-10.rur-2022-10.r1"}
         },
 		 		 
           "OracleSnapshotId" :
@@ -188,10 +188,10 @@
 		 "AuroraMap": {
 
 			"aurora-postgresql": {
-				"AuroraEngineVersion": "11.7",
+				"AuroraEngineVersion": "12.9",
 				"AuroraPort": "5432",
-				"AuroraParameterGroupName": "default.aurora-postgresql11",
-				"AuroraPGFamily": "aurora-postgresql11"
+				"AuroraParameterGroupName": "default.aurora-postgresql12",
+				"AuroraPGFamily": "aurora-postgresql12"
 			}
 		  }
     },  
@@ -461,6 +461,8 @@
 
     "OracleDB" : {
       "Type" : "AWS::RDS::DBInstance",
+	  "DependsOn" : "AttachGateway",
+	  "DeletionPolicy" : "Delete",
       "Properties" : {
         "DBName" : { "Ref" : "OracleDBName" },
         "AllocatedStorage" : { "Ref" : "OracleDBStorage" },
@@ -482,6 +484,7 @@
 
    "AuroraCluster" : {
       "Type" : "AWS::RDS::DBCluster",
+	  "DependsOn" : "AttachGateway",
       "Properties" : {
         "MasterUsername" : { "Ref" : "AuroraDBUsername" },
         "MasterUserPassword" : { "Ref" : "AuroraDBPassword" },
@@ -515,7 +518,15 @@
       "Type": "AWS::RDS::DBParameterGroup",
       "Properties" : {
         "Description" : "PostgreSQL Parameter Group for DMS Lab",
-        "Family" : "aurora-postgresql11",
+        "Family" : {
+				"Fn::FindInMap": [
+					"AuroraMap",
+					{
+						"Ref": "AuroraEngineType"
+					},
+					"AuroraPGFamily"
+				]
+			},
         "Parameters" : {
           "session_replication_role": "replica"
         }
@@ -524,6 +535,7 @@
 
     "AuroraDB" : {
       "Type" : "AWS::RDS::DBInstance",
+	  "DependsOn" : "AttachGateway",
       "Properties" : {
         "DBSubnetGroupName" : { "Ref" : "MyDBSubnetGroup" },
 		"Engine" : {"Ref": "AuroraEngineType"},
@@ -608,7 +620,7 @@
 	"Cloud9DevIAMRole" : {
     "Type" : "AWS::IAM::Role",
     "Properties" : {
-    "ManagedPolicyArns" : ["arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess","arn:aws:iam::aws:policy/AmazonS3FullAccess","arn:aws:iam::aws:policy/AWSLambdaFullAccess","arn:aws:iam::aws:policy/SecretsManagerReadWrite","arn:aws:iam::aws:policy/AWSCloudFormationFullAccess"],
+    "ManagedPolicyArns" : ["arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess","arn:aws:iam::aws:policy/AmazonS3FullAccess","arn:aws:iam::aws:policy/AWSLambda_FullAccess","arn:aws:iam::aws:policy/SecretsManagerReadWrite","arn:aws:iam::aws:policy/AWSCloudFormationFullAccess"],
       "AssumeRolePolicyDocument" : {
         "Version" : "2012-10-17",
         "Statement" : [{
@@ -629,7 +641,7 @@
         "Type": "AWS::IAM::Role",
         "Condition" : "NotExistsDMSVPCRole",
         "Properties": {
-           "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"],
+           "ManagedPolicyArns": [ "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole" ],
            "Path": "/",
            "RoleName": "dms-vpc-role",
            "AssumeRolePolicyDocument" : {
@@ -643,7 +655,7 @@
         }
      },
 
-    "DMSIAMRole2": {
+"DMSIAMRole2": {
         "Type": "AWS::IAM::Role",
         "Condition" : "NotExistsDMSVPCRole",
         "Properties": {
@@ -681,7 +693,7 @@
       "Properties": {
        "AllocatedStorage": 100,
        "PubliclyAccessible": "false",
-	   "EngineVersion": "3.4.0",
+	   "EngineVersion": "3.4.6",
        "ReplicationInstanceClass": { "Ref" : "DMSInstanceType" },
        "ReplicationSubnetGroupIdentifier": { "Ref" : "MyDMSReplicationSubnetGroup" },
        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} } ]
